@@ -79,17 +79,18 @@
 
           <div class="work__box">
             <div class="work__text">
-              <h3>Executive KPI Dashboard</h3>
+              <h3>AdventureWorks Analytics Dashboard</h3>
               <p>
-                Real-time Power BI dashboard with automated data refresh, KPI alerts, and drill-down capabilities. 
-                Reduced reporting time by 85%.
+                Comprehensive Power BI solution analyzing AdventureWorks sales data with interactive visualizations, 
+                territory performance metrics, and product profitability analysis. Features drill-through capabilities 
+                and dynamic filtering across 4 integrated report pages.
               </p>
               <div class="roi-badge">Saved 8 hours/week</div>
               <ul class="work__list">
-                <li>Power BI</li>
-                <li>DAX Formulas</li>
-                <li>SQL Server</li>
-                <li>Automated Refresh</li>
+                <li>Power BI Desktop</li>
+                <li>Complex DAX Measures</li>
+                <li>AdventureWorks Dataset</li>
+                <li>Interactive Visualizations</li>
               </ul>
 
               <div class="work__links">
@@ -98,8 +99,25 @@
                 </a>
               </div>
             </div>
-            <div class="work__image-box">
-              <img src="./images/project-2.png" class="work__image" alt="Executive KPI Dashboard" />
+            <div class="work__image-box slider-container">
+              <div class="slider">
+                <div class="slider__track">
+                  <img src="./images/pbi-adventureworks-1-home.jpg" class="slider__image active" alt="AdventureWorks Home Dashboard" data-slide="1" />
+                  <img src="./images/pbi-adventureworks-2-overview.jpg" class="slider__image" alt="AdventureWorks Overview" data-slide="2" />
+                  <img src="./images/pbi-adventureworks-3-territory.jpg" class="slider__image" alt="Territory Performance Analysis" data-slide="3" />
+                  <img src="./images/pbi-adventureworks-4-products.jpg" class="slider__image" alt="Product Analysis Dashboard" data-slide="4" />
+                </div>
+                <div class="slider__nav">
+                  <button class="slider__btn slider__btn--prev" aria-label="Previous image">‹</button>
+                  <button class="slider__btn slider__btn--next" aria-label="Next image">›</button>
+                </div>
+                <div class="slider__dots">
+                  <span class="slider__dot active" data-slide="1"></span>
+                  <span class="slider__dot" data-slide="2"></span>
+                  <span class="slider__dot" data-slide="3"></span>
+                  <span class="slider__dot" data-slide="4"></span>
+                </div>
+              </div>
             </div>
           </div>
 
@@ -289,6 +307,17 @@
   <a href="#top" class="back-to-top" title="Back to Top">
     <img src="./images/arrow-up.svg" alt="Back to Top" class="back-to-top__image"/>
   </a>
+  
+  <!-- Image Modal -->
+  <div class="modal" id="imageModal">
+    <div class="modal__overlay"></div>
+    <div class="modal__content">
+      <button class="modal__close" aria-label="Close modal">&times;</button>
+      <img class="modal__image" src="" alt="">
+      <div class="modal__caption"></div>
+    </div>
+  </div>
+  
   <script src="./index.js"></script>
 </body>
 
