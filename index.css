@@ -792,3 +792,215 @@ body:not(.user-is-tabbing) a:focus {
         padding: 2rem 0;
     }
 }
+
+/* --------------------------------------- */
+/* ----- Additional Skills Section ----- */
+/* --------------------------------------- */
+
+.additional-skills {
+    margin-top: 6rem;
+    padding: 4rem 0;
+    border-top: 1px solid rgba(20, 184, 166, 0.2);
+    background: linear-gradient(135deg, rgba(20, 184, 166, 0.05), rgba(8, 145, 178, 0.05));
+    border-radius: 1rem;
+}
+
+.additional-skills h3 {
+    font-size: var(--font-size-medium);
+    margin-bottom: 2rem;
+    color: var(--teal-primary);
+    text-align: center;
+    font-weight: 600;
+}
+
+.skills-intro {
+    font-size: var(--font-size-normal);
+    color: var(--text-gray);
+    text-align: center;
+    margin-bottom: 3rem;
+    font-style: italic;
+    max-width: 70rem;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.skills-project {
+    background: rgba(255, 255, 255, 0.02);
+    border: 1px solid rgba(20, 184, 166, 0.3);
+    border-radius: 1.2rem;
+    padding: 3rem;
+    margin-top: 2rem;
+    backdrop-filter: blur(10px);
+    transition: all 0.3s ease;
+}
+
+.skills-project:hover {
+    border-color: var(--teal-primary);
+    box-shadow: 0 8px 32px rgba(20, 184, 166, 0.15);
+    transform: translateY(-2px);
+}
+
+.project-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 1.5rem;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+
+.project-header h4 {
+    font-size: var(--font-size-normal);
+    color: var(--white);
+    font-weight: 600;
+    margin: 0;
+}
+
+.project-badge {
+    background: var(--gradient-primary);
+    color: white;
+    padding: 0.5rem 1.2rem;
+    border-radius: 2rem;
+    font-size: 1.4rem;
+    font-weight: 500;
+    white-space: nowrap;
+}
+
+.project-description {
+    font-size: var(--font-size-small);
+    color: var(--white-1);
+    line-height: var(--line-height-normal);
+    margin-bottom: 2rem;
+}
+
+.tech-stack {
+    margin-bottom: 2rem;
+}
+
+.tech-stack h5 {
+    font-size: var(--font-size-small);
+    color: var(--teal-primary);
+    margin-bottom: 1rem;
+    font-weight: 600;
+}
+
+.tech-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.tech-list li {
+    background: rgba(20, 184, 166, 0.1);
+    color: var(--teal-primary);
+    padding: 0.5rem 1rem;
+    border-radius: 0.8rem;
+    font-size: 1.5rem;
+    font-weight: 500;
+    border: 1px solid rgba(20, 184, 166, 0.3);
+    transition: all 0.2s ease;
+}
+
+.tech-list li:hover {
+    background: rgba(20, 184, 166, 0.2);
+    border-color: var(--teal-primary);
+}
+
+.project-links {
+    margin-bottom: 2rem;
+}
+
+.project-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: var(--teal-primary);
+    text-decoration: none;
+    font-weight: 600;
+    font-size: var(--font-size-small);
+    transition: all 0.2s ease;
+    padding: 1rem 2rem;
+    border: 2px solid var(--teal-primary);
+    border-radius: 0.8rem;
+    background: transparent;
+}
+
+.project-link:hover {
+    background: var(--teal-primary);
+    color: var(--black);
+    transform: translateX(0.5rem);
+}
+
+.project-link span {
+    font-size: 1.6rem;
+    transition: transform 0.2s ease;
+}
+
+.project-link:hover span {
+    transform: translateX(0.3rem);
+}
+
+.skills-disclaimer {
+    padding-top: 2rem;
+    border-top: 1px solid rgba(20, 184, 166, 0.2);
+    color: var(--text-gray);
+    font-size: 1.6rem;
+    line-height: 1.5;
+    text-align: center;
+}
+
+.skills-disclaimer em {
+    font-style: italic;
+    color: rgba(255, 255, 255, 0.7);
+}
+
+/* Responsive Design */
+@media(max-width: 900px) {
+    .additional-skills {
+        margin-top: 4rem;
+        padding: 3rem 0;
+    }
+    
+    .skills-project {
+        padding: 2rem;
+    }
+    
+    .project-header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .tech-list {
+        justify-content: center;
+    }
+}
+
+@media(max-width: 600px) {
+    .additional-skills h3 {
+        font-size: var(--font-size-normal);
+    }
+    
+    .skills-intro {
+        font-size: var(--font-size-small);
+    }
+    
+    .project-header h4 {
+        font-size: var(--font-size-small);
+    }
+    
+    .skills-project {
+        padding: 1.5rem;
+    }
+    
+    .tech-list {
+        gap: 0.8rem;
+    }
+    
+    .tech-list li {
+        font-size: 1.3rem;
+        padding: 0.4rem 0.8rem;
+    }
+}
