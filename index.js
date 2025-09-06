@@ -161,162 +161,153 @@ document.addEventListener('DOMContentLoaded', () => {
 });
 
 /* -----------------------------------------
-  Image Slider Functionality
+  Gallery Modal Functionality
  ---------------------------------------- */
 
-class ImageSlider {
-  constructor(container) {
-    this.container = container;
-    this.images = container.querySelectorAll('.slider__image');
-    this.dots = container.querySelectorAll('.slider__dot');
-    this.prevBtn = container.querySelector('.slider__btn--prev');
-    this.nextBtn = container.querySelector('.slider__btn--next');
-    this.currentSlide = 1;
-    this.totalSlides = this.images.length;
-    
-    this.init();
-  }
-  
-  init() {
-    // Button navigation
-    if (this.prevBtn) {
-      this.prevBtn.addEventListener('click', () => this.prevSlide());
-    }
-    if (this.nextBtn) {
-      this.nextBtn.addEventListener('click', () => this.nextSlide());
-    }
-    
-    // Dot navigation
-    this.dots.forEach(dot => {
-      dot.addEventListener('click', (e) => {
-        const slideNum = parseInt(e.target.dataset.slide);
-        this.goToSlide(slideNum);
-      });
-    });
-    
-    // Auto-play
-    this.startAutoPlay();
-    
-    // Pause on hover
-    this.container.addEventListener('mouseenter', () => this.stopAutoPlay());
-    this.container.addEventListener('mouseleave', () => this.startAutoPlay());
-    
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-      if (!this.container.closest('.work__box')) return;
-      if (e.key === 'ArrowLeft') this.prevSlide();
-      if (e.key === 'ArrowRight') this.nextSlide();
-    });
-  }
-  
-  goToSlide(slideNum) {
-    // Hide all slides
-    this.images.forEach(img => img.classList.remove('active'));
-    this.dots.forEach(dot => dot.classList.remove('active'));
-    
-    // Show selected slide
-    const targetImage = this.container.querySelector(`[data-slide="${slideNum}"]`);
-    const targetDot = this.container.querySelector(`.slider__dot[data-slide="${slideNum}"]`);
-    
-    if (targetImage) {
-      targetImage.classList.add('active');
-    }
-    if (targetDot) {
-      targetDot.classList.add('active');
-    }
-    
-    this.currentSlide = slideNum;
-  }
-  
-  nextSlide() {
-    const next = this.currentSlide >= this.totalSlides ? 1 : this.currentSlide + 1;
-    this.goToSlide(next);
-  }
-  
-  prevSlide() {
-    const prev = this.currentSlide <= 1 ? this.totalSlides : this.currentSlide - 1;
-    this.goToSlide(prev);
-  }
-  
-  startAutoPlay() {
-    this.autoPlayInterval = setInterval(() => {
-      this.nextSlide();
-    }, 4000); // Change slide every 4 seconds
-  }
-  
-  stopAutoPlay() {
-    if (this.autoPlayInterval) {
-      clearInterval(this.autoPlayInterval);
-    }
-  }
-}
-
-/* -----------------------------------------
-  Image Modal Functionality
- ---------------------------------------- */
-
-class ImageModal {
+class GalleryModal {
   constructor() {
-    this.modal = document.getElementById('imageModal');
+    this.modal = document.getElementById('galleryModal');
     this.modalImage = this.modal.querySelector('.modal__image');
     this.modalCaption = this.modal.querySelector('.modal__caption');
     this.closeBtn = this.modal.querySelector('.modal__close');
     this.overlay = this.modal.querySelector('.modal__overlay');
+    this.prevBtn = this.modal.querySelector('.gallery__btn--prev');
+    this.nextBtn = this.modal.querySelector('.gallery__btn--next');
+    this.counter = this.modal.querySelector('.gallery__counter');
+    this.dots = this.modal.querySelectorAll('.gallery__dot');
+    
+    this.currentIndex = 0;
+    this.galleryImages = [
+      {
+        src: './images/pbi-adventureworks-1-home.jpg',
+        alt: 'AdventureWorks Home Dashboard'
+      },
+      {
+        src: './images/pbi-adventureworks-2-overview.jpg',
+        alt: 'AdventureWorks Overview Dashboard'
+      },
+      {
+        src: './images/pbi-adventureworks-3-territory.jpg',
+        alt: 'Territory Performance Analysis'
+      },
+      {
+        src: './images/pbi-adventureworks-4-products.jpg',
+        alt: 'Product Analysis Dashboard'
+      }
+    ];
     
     this.init();
   }
   
   init() {
-    // Click handlers for all slider images
-    document.querySelectorAll('.slider__image').forEach(img => {
-      img.addEventListener('click', (e) => {
-        this.open(e.target.src, e.target.alt);
+    // Click handlers for gallery triggers
+    document.querySelectorAll('.gallery-trigger').forEach(trigger => {
+      trigger.addEventListener('click', (e) => {
+        this.open(0); // Always start with first image
       });
     });
     
-    // Click handler for regular work images
-    document.querySelectorAll('.work__image:not(.slider__image)').forEach(img => {
-      img.addEventListener('click', (e) => {
-        this.open(e.target.src, e.target.alt);
-      });
+    // Navigation buttons
+    this.prevBtn.addEventListener('click', () => this.prevImage());
+    this.nextBtn.addEventListener('click', () => this.nextImage());
+    
+    // Dot navigation
+    this.dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => this.goToImage(index));
     });
     
     // Close handlers
     this.closeBtn.addEventListener('click', () => this.close());
     this.overlay.addEventListener('click', () => this.close());
     
-    // ESC key to close
+    // Keyboard navigation
     document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.modal.classList.contains('active')) {
-        this.close();
+      if (!this.modal.classList.contains('active')) return;
+      
+      switch(e.key) {
+        case 'Escape':
+          this.close();
+          break;
+        case 'ArrowLeft':
+          this.prevImage();
+          break;
+        case 'ArrowRight':
+          this.nextImage();
+          break;
       }
+    });
+    
+    // Click handlers for regular work images (non-gallery)
+    document.querySelectorAll('.work__image:not(.gallery-trigger)').forEach(img => {
+      img.addEventListener('click', (e) => {
+        this.openSingle(e.target.src, e.target.alt);
+      });
     });
   }
   
-  open(src, alt) {
+  open(index = 0) {
+    this.currentIndex = index;
+    this.updateDisplay();
+    this.modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+  }
+  
+  openSingle(src, alt) {
     this.modalImage.src = src;
     this.modalCaption.textContent = alt;
     this.modal.classList.add('active');
     document.body.style.overflow = 'hidden';
+    
+    // Hide gallery controls for single images
+    this.prevBtn.style.display = 'none';
+    this.nextBtn.style.display = 'none';
+    this.modal.querySelector('.gallery__indicators').style.display = 'none';
   }
   
   close() {
     this.modal.classList.remove('active');
     document.body.style.overflow = '';
+    
+    // Show gallery controls again
+    this.prevBtn.style.display = 'flex';
+    this.nextBtn.style.display = 'flex';
+    this.modal.querySelector('.gallery__indicators').style.display = 'flex';
+    
     setTimeout(() => {
       this.modalImage.src = '';
       this.modalCaption.textContent = '';
     }, 300);
   }
+  
+  updateDisplay() {
+    const currentImage = this.galleryImages[this.currentIndex];
+    this.modalImage.src = currentImage.src;
+    this.modalCaption.textContent = currentImage.alt;
+    this.counter.textContent = `${this.currentIndex + 1} / ${this.galleryImages.length}`;
+    
+    // Update dots
+    this.dots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === this.currentIndex);
+    });
+  }
+  
+  nextImage() {
+    this.currentIndex = (this.currentIndex + 1) % this.galleryImages.length;
+    this.updateDisplay();
+  }
+  
+  prevImage() {
+    this.currentIndex = this.currentIndex === 0 ? this.galleryImages.length - 1 : this.currentIndex - 1;
+    this.updateDisplay();
+  }
+  
+  goToImage(index) {
+    this.currentIndex = index;
+    this.updateDisplay();
+  }
 }
 
-// Initialize sliders and modal when DOM is ready
+// Initialize gallery modal when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  // Initialize all sliders
-  document.querySelectorAll('.slider').forEach(slider => {
-    new ImageSlider(slider);
-  });
-  
-  // Initialize modal
-  new ImageModal();
+  new GalleryModal();
 });

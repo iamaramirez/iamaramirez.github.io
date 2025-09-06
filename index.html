@@ -73,7 +73,7 @@
               </div>
             </div>
             <div class="work__image-box">
-              <img src="./images/project-1.png" class="work__image" alt="ServiceTitan Xero Integration Dashboard" />
+              <img src="./images/project-2.png" class="work__image" alt="ServiceTitan Xero Integration Dashboard" />
             </div>
           </div>
 
@@ -99,24 +99,14 @@
                 </a>
               </div>
             </div>
-            <div class="work__image-box slider-container">
-              <div class="slider">
-                <div class="slider__track">
-                  <img src="./images/pbi-adventureworks-1-home.jpg" class="slider__image active" alt="AdventureWorks Home Dashboard" data-slide="1" />
-                  <img src="./images/pbi-adventureworks-2-overview.jpg" class="slider__image" alt="AdventureWorks Overview" data-slide="2" />
-                  <img src="./images/pbi-adventureworks-3-territory.jpg" class="slider__image" alt="Territory Performance Analysis" data-slide="3" />
-                  <img src="./images/pbi-adventureworks-4-products.jpg" class="slider__image" alt="Product Analysis Dashboard" data-slide="4" />
-                </div>
-                <div class="slider__nav">
-                  <button class="slider__btn slider__btn--prev" aria-label="Previous image">‹</button>
-                  <button class="slider__btn slider__btn--next" aria-label="Next image">›</button>
-                </div>
-                <div class="slider__dots">
-                  <span class="slider__dot active" data-slide="1"></span>
-                  <span class="slider__dot" data-slide="2"></span>
-                  <span class="slider__dot" data-slide="3"></span>
-                  <span class="slider__dot" data-slide="4"></span>
-                </div>
+            <div class="work__image-box">
+              <img src="./images/pbi-adventureworks-1-home.jpg" 
+                   class="work__image gallery-trigger" 
+                   alt="AdventureWorks Analytics Dashboard" 
+                   data-gallery="adventureworks" />
+              <div class="gallery-overlay">
+                <div class="gallery-overlay__text">Click to view all 4 dashboards</div>
+                <div class="gallery-overlay__icon">🔍</div>
               </div>
             </div>
           </div>
@@ -308,12 +298,25 @@
     <img src="./images/arrow-up.svg" alt="Back to Top" class="back-to-top__image"/>
   </a>
   
-  <!-- Image Modal -->
-  <div class="modal" id="imageModal">
+  <!-- Gallery Modal -->
+  <div class="modal" id="galleryModal">
     <div class="modal__overlay"></div>
     <div class="modal__content">
       <button class="modal__close" aria-label="Close modal">&times;</button>
-      <img class="modal__image" src="" alt="">
+      <div class="gallery-container">
+        <button class="gallery__btn gallery__btn--prev" aria-label="Previous image">‹</button>
+        <img class="modal__image" src="" alt="">
+        <button class="gallery__btn gallery__btn--next" aria-label="Next image">›</button>
+      </div>
+      <div class="gallery__indicators">
+        <span class="gallery__counter">1 / 4</span>
+        <div class="gallery__dots">
+          <span class="gallery__dot active" data-index="0"></span>
+          <span class="gallery__dot" data-index="1"></span>
+          <span class="gallery__dot" data-index="2"></span>
+          <span class="gallery__dot" data-index="3"></span>
+        </div>
+      </div>
       <div class="modal__caption"></div>
     </div>
   </div>
