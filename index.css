@@ -78,6 +78,106 @@ body {
     overflow-x: hidden;
 }
 
+/* --------------------------------------- */
+/* ----- Animation Classes ----- */
+/* --------------------------------------- */
+
+@keyframes fadeInUp {
+    from {
+        opacity: 0;
+        transform: translateY(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+@keyframes fadeInLeft {
+    from {
+        opacity: 0;
+        transform: translateX(-30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes fadeInRight {
+    from {
+        opacity: 0;
+        transform: translateX(30px);
+    }
+    to {
+        opacity: 1;
+        transform: translateX(0);
+    }
+}
+
+@keyframes scaleIn {
+    from {
+        opacity: 0;
+        transform: scale(0.9);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes countUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+.animate-on-scroll {
+    opacity: 0;
+    animation-duration: 0.8s;
+    animation-fill-mode: both;
+    animation-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.animate-on-scroll.visible {
+    animation-name: fadeInUp;
+}
+
+.animate-left {
+    opacity: 0;
+}
+
+.animate-left.visible {
+    animation: fadeInLeft 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-right {
+    opacity: 0;
+}
+
+.animate-right.visible {
+    animation: fadeInRight 0.8s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+.animate-scale {
+    opacity: 0;
+}
+
+.animate-scale.visible {
+    animation: scaleIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
+}
+
+/* Stagger animation delays */
+.delay-1 { animation-delay: 0.1s; }
+.delay-2 { animation-delay: 0.2s; }
+.delay-3 { animation-delay: 0.3s; }
+.delay-4 { animation-delay: 0.4s; }
+
 .row {
     max-width: var(--container-max-width);
     margin: 0 auto;
@@ -218,17 +318,37 @@ body:not(.user-is-tabbing) a:focus {
     border: 1px solid var(--teal-primary);
     font-weight: 400;
     border-radius: 8px;
-    transition: all .2s;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     background: var(--gradient-primary);
     color: var(--white);
     font-weight: 600;
+    overflow: hidden;
+}
+
+.btn::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 0;
+    height: 0;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.15);
+    transform: translate(-50%, -50%);
+    transition: width 0.6s, height 0.6s;
+}
+
+.btn:hover::before {
+    width: 400px;
+    height: 400px;
 }
 
 .btn:focus,
 .btn:hover {
     background: var(--gradient-dark);
-    transform: translateY(-2px);
-    box-shadow: 0 10px 20px rgba(20, 184, 166, 0.3);
+    transform: translateY(-3px) scale(1.02);
+    box-shadow: 0 15px 30px rgba(20, 184, 166, 0.4);
+    border-color: transparent;
 }
 
 .btn--pink {
@@ -470,6 +590,33 @@ body:not(.user-is-tabbing) a:focus {
 .work__box {
     display: flex;
     align-items: center;
+    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.work__box::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(20, 184, 166, 0.05), transparent);
+    transition: left 0.8s ease;
+    pointer-events: none;
+}
+
+.work__box:hover::before {
+    left: 100%;
+}
+
+.work__box:hover {
+    transform: translateY(-5px);
+}
+
+.work__box:hover .work__image {
+    transform: scale(1.05);
+    box-shadow: 0 20px 40px rgba(20, 184, 166, 0.3);
 }
 
 @media(max-width: 900px) {
@@ -524,6 +671,13 @@ body:not(.user-is-tabbing) a:focus {
 .work__image-box {
     flex: 1;
     margin-left: 10rem;
+    overflow: hidden;
+    border-radius: 1rem;
+}
+
+.work__image {
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1), box-shadow 0.4s ease;
+    border-radius: 1rem;
 }
 
 @media(max-width: 900px) {
