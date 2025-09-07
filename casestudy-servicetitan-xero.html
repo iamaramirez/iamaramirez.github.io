@@ -1,0 +1,830 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ServiceTitan to Xero Integration - Allan Ramirez | Business Process Automation Expert</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f8f9fa;
+            line-height: 1.6;
+        }
+
+        /* Case Study Header */
+        .case-study-header {
+            background: linear-gradient(135deg, #0078d4, #106ebe);
+            color: white;
+            padding: 20px 0 40px 0;
+            margin-bottom: 0;
+        }
+
+        .header-nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .back-link {
+            color: white;
+            text-decoration: none;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.3s ease;
+        }
+
+        .back-link:hover {
+            opacity: 0.8;
+        }
+
+        .case-study-breadcrumb {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .hero-section {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+            text-align: center;
+        }
+
+        .hero-section h1 {
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            line-height: 1.2;
+        }
+
+        .hero-subtitle {
+            font-size: 24px;
+            opacity: 0.9;
+            margin-bottom: 40px;
+            font-weight: 300;
+        }
+
+        .hero-metrics {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            margin: 40px 0;
+        }
+
+        .hero-metric {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .metric-value {
+            font-size: 36px;
+            font-weight: bold;
+            line-height: 1;
+        }
+
+        .metric-label {
+            font-size: 14px;
+            opacity: 0.8;
+            margin-top: 5px;
+        }
+
+        .hero-cta {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .hero-cta .btn {
+            padding: 15px 30px;
+            font-size: 16px;
+            font-weight: 600;
+            border-radius: 8px;
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .hero-cta .btn--primary {
+            background: white;
+            color: #0078d4;
+            border: 2px solid white;
+        }
+
+        .hero-cta .btn--primary:hover {
+            background: #f8f9fa;
+            transform: translateY(-2px);
+        }
+
+        .hero-cta .btn--secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+        }
+
+        .hero-cta .btn--secondary:hover {
+            background: white;
+            color: #0078d4;
+        }
+
+        /* Content Container */
+        .content-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+
+        .mockup-section {
+            background: white;
+            margin: 30px 0;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+
+        .mockup-section:first-of-type {
+            margin-top: 0;
+        }
+
+        .mockup-title {
+            font-size: 24px;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        /* Enterprise Integration Architecture */
+        .integration-flow {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 40px 0;
+            position: relative;
+        }
+
+        .integration-step {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #0078d4, #106ebe);
+            color: white;
+            border-radius: 12px;
+            min-width: 140px;
+            text-align: center;
+            position: relative;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .integration-step.servicetitan { background: linear-gradient(135deg, #ff6b35, #f7931e); }
+        .integration-step.power-platform { background: linear-gradient(135deg, #0078d4, #106ebe); }
+        .integration-step.xero { background: linear-gradient(135deg, #13b5ea, #009fda); }
+
+        .integration-arrow {
+            position: absolute;
+            top: 50%;
+            right: -25px;
+            width: 0;
+            height: 0;
+            border-top: 15px solid transparent;
+            border-bottom: 15px solid transparent;
+            border-left: 25px solid #0078d4;
+            z-index: 1;
+        }
+
+        .step-icon {
+            font-size: 36px;
+            margin-bottom: 10px;
+        }
+
+        .step-title {
+            font-weight: 600;
+            margin-bottom: 5px;
+        }
+
+        .step-details {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        /* Power Platform Components */
+        .platform-components {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .component-card {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 25px;
+            border-radius: 12px;
+            text-align: center;
+            transition: transform 0.3s ease;
+        }
+
+        .component-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .component-icon {
+            font-size: 40px;
+            margin-bottom: 15px;
+        }
+
+        .component-title {
+            font-size: 18px;
+            font-weight: 600;
+            margin-bottom: 10px;
+        }
+
+        .component-desc {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        /* Before/After Enterprise Comparison */
+        .enterprise-comparison {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 30px;
+            margin: 30px 0;
+        }
+
+        .comparison-side {
+            padding: 30px;
+            border-radius: 12px;
+            text-align: center;
+        }
+
+        .before-side {
+            background: linear-gradient(135deg, #dc3545, #c82333);
+            color: white;
+        }
+
+        .after-side {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+        }
+
+        .comparison-metric {
+            font-size: 42px;
+            font-weight: bold;
+            margin: 20px 0;
+        }
+
+        .comparison-icon {
+            font-size: 56px;
+            margin: 20px 0;
+        }
+
+        /* ROI Calculator Dashboard */
+        .roi-dashboard {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 30px;
+            border-radius: 12px;
+            margin: 30px 0;
+        }
+
+        .roi-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+
+        .roi-card {
+            background: white;
+            padding: 25px;
+            border-radius: 8px;
+            text-align: center;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .roi-number {
+            font-size: 36px;
+            font-weight: bold;
+            color: #0078d4;
+            margin-bottom: 10px;
+        }
+
+        .roi-label {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        .roi-calculation {
+            background: linear-gradient(135deg, #28a745, #20c997);
+            color: white;
+            padding: 25px;
+            border-radius: 8px;
+            margin-top: 20px;
+            text-align: center;
+        }
+
+        /* Implementation Timeline */
+        .timeline-container {
+            position: relative;
+            padding: 30px 0;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 50%;
+            top: 0;
+            bottom: 0;
+            width: 3px;
+            background: #0078d4;
+            transform: translateX(-50%);
+        }
+
+        .timeline-item {
+            display: flex;
+            align-items: center;
+            margin: 30px 0;
+            position: relative;
+        }
+
+        .timeline-content {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            width: 45%;
+        }
+
+        .timeline-item:nth-child(odd) .timeline-content {
+            margin-left: auto;
+        }
+
+        .timeline-item:nth-child(even) .timeline-content {
+            margin-right: auto;
+        }
+
+        .timeline-marker {
+            position: absolute;
+            left: 50%;
+            width: 20px;
+            height: 20px;
+            background: #0078d4;
+            border-radius: 50%;
+            transform: translateX(-50%);
+            z-index: 1;
+        }
+
+        .phase-title {
+            font-weight: 600;
+            color: #0078d4;
+            margin-bottom: 10px;
+        }
+
+        /* Technical Challenges */
+        .challenge-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .challenge-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #dc3545;
+        }
+
+        .challenge-title {
+            font-weight: 600;
+            color: #dc3545;
+            margin-bottom: 10px;
+        }
+
+        .solution-card {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 8px;
+            border-left: 4px solid #28a745;
+            margin-top: 15px;
+        }
+
+        .solution-title {
+            font-weight: 600;
+            color: #28a745;
+            margin-bottom: 10px;
+        }
+
+        /* Industry Impact */
+        .impact-stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 20px;
+            margin: 30px 0;
+        }
+
+        .impact-stat {
+            text-align: center;
+            padding: 20px;
+        }
+
+        .impact-number {
+            font-size: 32px;
+            font-weight: bold;
+            color: #0078d4;
+            margin-bottom: 10px;
+        }
+
+        .impact-label {
+            font-size: 14px;
+            color: #6c757d;
+        }
+
+        /* Footer CTA */
+        .footer-cta {
+            background: linear-gradient(135deg, #0078d4, #106ebe);
+            color: white;
+            padding: 40px 20px;
+            text-align: center;
+            margin-top: 40px;
+        }
+
+        .footer-cta h2 {
+            font-size: 28px;
+            margin-bottom: 15px;
+        }
+
+        .footer-cta p {
+            font-size: 18px;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        /* Responsive Design */
+        @media (max-width: 768px) {
+            .hero-section h1 {
+                font-size: 32px;
+            }
+            
+            .hero-subtitle {
+                font-size: 18px;
+            }
+            
+            .hero-metrics {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .hero-cta {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .hero-cta .btn {
+                width: 100%;
+                max-width: 300px;
+            }
+
+            .integration-flow {
+                flex-direction: column;
+                gap: 20px;
+            }
+            
+            .integration-arrow {
+                display: none;
+            }
+            
+            .enterprise-comparison {
+                grid-template-columns: 1fr;
+            }
+            
+            .timeline-line {
+                left: 20px;
+            }
+            
+            .timeline-content {
+                width: calc(100% - 60px);
+                margin-left: 60px !important;
+                margin-right: 0 !important;
+            }
+            
+            .timeline-marker {
+                left: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <header class="case-study-header">
+        <div class="header-nav">
+            <a href="./index.html" class="back-link">← Back to Portfolio</a>
+            <div class="case-study-breadcrumb">
+                <span>Automation Projects</span> / <span>ServiceTitan Integration</span>
+            </div>
+        </div>
+        
+        <div class="hero-section">
+            <h1>ServiceTitan to Xero Integration</h1>
+            <p class="hero-subtitle">Enterprise Financial Automation for Home Services</p>
+            
+            <div class="hero-metrics">
+                <div class="hero-metric">
+                    <span class="metric-value">400%</span>
+                    <span class="metric-label">ROI in 3 Months</span>
+                </div>
+                <div class="hero-metric">
+                    <span class="metric-value">1 FTE</span>
+                    <span class="metric-label">Position Eliminated</span>
+                </div>
+                <div class="hero-metric">
+                    <span class="metric-value">4 Month</span>
+                    <span class="metric-label">Implementation</span>
+                </div>
+            </div>
+            
+            <div class="hero-cta">
+                <a href="./index.html#contact" class="btn btn--primary">Get Similar Integration</a>
+                <a href="mailto:iamahlramz253@gmail.com" class="btn btn--secondary">Schedule Consultation</a>
+            </div>
+        </div>
+    </header>
+
+    <!-- Content -->
+    <div class="content-container">
+        <!-- Enterprise Integration Architecture -->
+        <div class="mockup-section">
+            <h2 class="mockup-title">🏗️ Enterprise Integration Architecture</h2>
+            <div class="integration-flow">
+                <div class="integration-step servicetitan">
+                    <div class="step-icon">🔧</div>
+                    <div class="step-title">ServiceTitan</div>
+                    <div class="step-details">Field Service Management<br>Invoice Generation</div>
+                    <div class="integration-arrow"></div>
+                </div>
+                
+                <div class="integration-step power-platform">
+                    <div class="step-icon">⚙️</div>
+                    <div class="step-title">Power Platform</div>
+                    <div class="step-details">Custom Integration<br>Data Transformation</div>
+                    <div class="integration-arrow"></div>
+                </div>
+                
+                <div class="integration-step xero">
+                    <div class="step-icon">📊</div>
+                    <div class="step-title">Xero</div>
+                    <div class="step-details">Financial Management<br>Real-time Sync</div>
+                </div>
+            </div>
+            
+            <div class="platform-components">
+                <div class="component-card">
+                    <div class="component-icon">🤖</div>
+                    <div class="component-title">Power Automate</div>
+                    <div class="component-desc">Custom connectors and integration logic with error handling</div>
+                </div>
+                
+                <div class="component-card">
+                    <div class="component-icon">📱</div>
+                    <div class="component-title">PowerApps</div>
+                    <div class="component-desc">Canvas app for manual mapping and exception handling</div>
+                </div>
+                
+                <div class="component-card">
+                    <div class="component-icon">📈</div>
+                    <div class="component-title">Power BI</div>
+                    <div class="component-desc">Monitoring dashboards for invoices and payment tracking</div>
+                </div>
+                
+                <div class="component-card">
+                    <div class="component-icon">🗄️</div>
+                    <div class="component-title">Dataverse</div>
+                    <div class="component-desc">Secure data storage and management with audit trails</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Enterprise Before/After Comparison -->
+        <div class="mockup-section">
+            <h2 class="mockup-title">⚖️ Enterprise Transformation Impact</h2>
+            <div class="enterprise-comparison">
+                <div class="comparison-side before-side">
+                    <div class="comparison-icon">😰</div>
+                    <h3>Manual Reconciliation Process</h3>
+                    <div class="comparison-metric">1 FTE</div>
+                    <p>Full-time position required</p>
+                    <div style="margin: 25px 0;">
+                        <p>✗ 50% reconciliation error rate</p>
+                        <p>✗ Hours of delay for financial visibility</p>
+                        <p>✗ Compliance and audit trail issues</p>
+                        <p>✗ Batch processing limitations</p>
+                        <p>✗ Premium client service issues</p>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; margin-top: 25px;">
+                        <strong>100+ invoices/day processing</strong><br>
+                        <strong>40+ hours weekly reconciliation</strong>
+                    </div>
+                </div>
+                
+                <div class="comparison-side after-side">
+                    <div class="comparison-icon">🚀</div>
+                    <h3>Automated Integration</h3>
+                    <div class="comparison-metric">15 min</div>
+                    <p>Total oversight time</p>
+                    <div style="margin: 25px 0;">
+                        <p>✓ Near-zero error rate</p>
+                        <p>✓ Real-time financial visibility</p>
+                        <p>✓ Complete audit trail automation</p>
+                        <p>✓ Individual invoice detail preservation</p>
+                        <p>✓ Enhanced premium client service</p>
+                    </div>
+                    <div style="background: rgba(0,0,0,0.2); padding: 20px; border-radius: 8px; margin-top: 25px;">
+                        <strong>Automatic 24/7 processing</strong><br>
+                        <strong>Eliminated reconciliation position</strong>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- ROI Dashboard -->
+        <div class="mockup-section">
+            <h2 class="mockup-title">💰 Enterprise ROI Analysis</h2>
+            <div class="roi-dashboard">
+                <div class="roi-grid">
+                    <div class="roi-card">
+                        <div class="roi-number">2,080</div>
+                        <div class="roi-label">Annual Hours Saved</div>
+                    </div>
+                    
+                    <div class="roi-card">
+                        <div class="roi-number">100+</div>
+                        <div class="roi-label">Daily Invoices Processed</div>
+                    </div>
+                    
+                    <div class="roi-card">
+                        <div class="roi-number">50%</div>
+                        <div class="roi-label">Error Reduction</div>
+                    </div>
+                    
+                    <div class="roi-card">
+                        <div class="roi-number">24/7</div>
+                        <div class="roi-label">Automated Processing</div>
+                    </div>
+                </div>
+                
+                <div class="roi-calculation">
+                    <div style="font-size: 28px; font-weight: bold; margin-bottom: 15px;">
+                        400% ROI Achieved in 3 Months
+                    </div>
+                    <div style="font-size: 16px; opacity: 0.9;">
+                        Eliminated 1 FTE position (2,080 annual hours) + Reduced errors + Improved cash flow visibility
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Implementation Timeline -->
+        <div class="mockup-section">
+            <h2 class="mockup-title">📅 4-Month Implementation Timeline</h2>
+            <div class="timeline-container">
+                <div class="timeline-line"></div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="phase-title">Month 1: Discovery & Analysis</div>
+                        <p>System assessment, data mapping analysis, and business process documentation. Identified reconciliation pain points and technical requirements.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="phase-title">Month 2: Architecture & Development</div>
+                        <p>Power Platform environment setup, custom connector development, and initial integration logic. Built PowerApps interface for manual exceptions.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="phase-title">Month 3: Testing & Refinement</div>
+                        <p>Comprehensive testing with real data, mapping logic refinements, and error handling optimization. Addressed complex premium client scenarios.</p>
+                    </div>
+                </div>
+                
+                <div class="timeline-item">
+                    <div class="timeline-marker"></div>
+                    <div class="timeline-content">
+                        <div class="phase-title">Month 4: Deployment & Training</div>
+                        <p>Production deployment, user training, monitoring setup, and go-live support. Achieved immediate 400% ROI upon completion.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Technical Challenges & Solutions -->
+        <div class="mockup-section">
+            <h2 class="mockup-title">🔧 Technical Challenges & Solutions</h2>
+            <div class="challenge-grid">
+                <div>
+                    <div class="challenge-card">
+                        <div class="challenge-title">Challenge: Complex Data Mapping</div>
+                        <p>ServiceTitan's job-based structure differed significantly from Xero's invoice format, requiring sophisticated field mapping and transformation logic.</p>
+                    </div>
+                    <div class="solution-card">
+                        <div class="solution-title">Solution: Dynamic Mapping Logic</div>
+                        <p>Developed custom Power Automate flows with intelligent field mapping, data transformation rules, and PowerApps interface for exception handling.</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="challenge-card">
+                        <div class="challenge-title">Challenge: Premium Client Complexity</div>
+                        <p>Real estate and premium clients had 50% reconciliation error rates due to multiple invoices and complex billing structures.</p>
+                    </div>
+                    <div class="solution-card">
+                        <div class="solution-title">Solution: Intelligent Processing</div>
+                        <p>Implemented advanced business logic to handle multi-invoice scenarios, preserve individual invoice details, and maintain audit trails.</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="challenge-card">
+                        <div class="challenge-title">Challenge: Real-time Processing</div>
+                        <p>Business required immediate financial visibility instead of delayed batch processing that took hours to complete.</p>
+                    </div>
+                    <div class="solution-card">
+                        <div class="solution-title">Solution: Live Integration</div>
+                        <p>Built real-time sync capabilities with Power BI monitoring dashboards, providing 15-minute visibility versus hours of delay.</p>
+                    </div>
+                </div>
+                
+                <div>
+                    <div class="challenge-card">
+                        <div class="challenge-title">Challenge: Enterprise Scalability</div>
+                        <p>System needed to handle 100+ daily invoices while maintaining performance and reliability across multiple business units.</p>
+                    </div>
+                    <div class="solution-card">
+                        <div class="solution-title">Solution: Robust Architecture</div>
+                        <p>Leveraged full Power Platform stack with Dataverse for scalable data management, comprehensive error handling, and monitoring systems.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Industry Impact -->
+        <div class="mockup-section">
+            <h2 class="mockup-title">🏢 Home Services Industry Impact</h2>
+            <div class="impact-stats">
+                <div class="impact-stat">
+                    <div class="impact-number">10-200</div>
+                    <div class="impact-label">Team Size Range</div>
+                </div>
+                
+                <div class="impact-stat">
+                    <div class="impact-number">30-100</div>
+                    <div class="impact-label">Daily Invoice Volume</div>
+                </div>
+                
+                <div class="impact-stat">
+                    <div class="impact-number">Multiple</div>
+                    <div class="impact-label">Business Units</div>
+                </div>
+                
+                <div class="impact-stat">
+                    <div class="impact-number">Enterprise</div>
+                    <div class="impact-label">Scale Operations</div>
+                </div>
+            </div>
+            
+            <div style="text-align: center; margin-top: 30px; padding: 25px; background: #f8f9fa; border-radius: 8px;">
+                <h4>Applicable to All Home Service Industries:</h4>
+                <p style="margin: 15px 0;">HVAC • Plumbing • Electrical • Landscaping • Roofing • Pest Control • Cleaning Services</p>
+                <p style="color: #6c757d; font-size: 14px;">Any business using ServiceTitan for field operations and Xero for financial management</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Footer CTA -->
+    <div class="footer-cta">
+        <h2>Ready for Enterprise-Grade Financial Automation?</h2>
+        <p>Transform your ServiceTitan to Xero integration with a solution that eliminates manual work and delivers immediate ROI.</p>
+        <div class="hero-cta">
+            <a href="./index.html#contact" class="btn btn--primary">Get Integration Assessment</a>
+            <a href="mailto:iamahlramz253@gmail.com" class="btn btn--secondary">Schedule Discovery Call</a>
+        </div>
+    </div>
+</body>
+</html>
