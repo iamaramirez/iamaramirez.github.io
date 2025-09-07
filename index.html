@@ -1009,6 +1009,226 @@
       </div>
     </div>
   </div>
+
+  <!-- ROI Calculator Modal -->
+  <div id="roiCalculatorModal" class="roi-modal">
+    <div class="roi-modal__overlay"></div>
+    <div class="roi-modal__container">
+      <div class="roi-modal__content">
+        <button class="roi-modal__close">&times;</button>
+        
+        <!-- Step 1: Solution Selection -->
+        <div id="roiStep1" class="roi-step active" data-step="1">
+          <div class="roi-header">
+            <h2>ROI Calculator</h2>
+            <p>Calculate your potential savings with automation. Choose a solution type:</p>
+          </div>
+          
+          <div class="roi-solutions">
+            <div class="roi-solution-card" data-solution="email">
+              <div class="roi-solution__icon">📧</div>
+              <h3>Email Processing Automation</h3>
+              <p>Automated attachment processing and file organization</p>
+              <div class="roi-solution__metrics">
+                <span>Typical savings: 20-40 hrs/month</span>
+                <span>Implementation: 2-3 weeks</span>
+              </div>
+            </div>
+            
+            <div class="roi-solution-card" data-solution="api">
+              <div class="roi-solution__icon">🔄</div>
+              <h3>API Monitoring System</h3>
+              <p>Real-time monitoring with instant alerts</p>
+              <div class="roi-solution__metrics">
+                <span>Typical savings: $5k-15k/month</span>
+                <span>Implementation: 4-6 weeks</span>
+              </div>
+            </div>
+            
+            <div class="roi-solution-card" data-solution="integration">
+              <div class="roi-solution__icon">🔗</div>
+              <h3>ServiceTitan-Xero Integration</h3>
+              <p>Automated data sync and reconciliation</p>
+              <div class="roi-solution__metrics">
+                <span>Typical savings: 15-30 hrs/week</span>
+                <span>Implementation: 6-12 weeks</span>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Step 2: Input Variables -->
+        <div id="roiStep2" class="roi-step" data-step="2">
+          <div class="roi-header">
+            <button class="roi-back-btn">← Back to Solutions</button>
+            <h2 id="roiSolutionTitle">Email Processing Automation</h2>
+            <p>Enter your current process details to calculate potential savings</p>
+          </div>
+
+          <div class="roi-inputs">
+            <!-- Email Processing Inputs -->
+            <div id="emailInputs" class="roi-input-group">
+              <div class="roi-input">
+                <label for="emailsPerDay">Emails with attachments processed daily</label>
+                <input type="number" id="emailsPerDay" min="1" max="500" value="25" required>
+                <span class="roi-input-help">Average number of emails with attachments your team processes</span>
+              </div>
+              <div class="roi-input">
+                <label for="timePerEmail">Minutes spent per email</label>
+                <input type="number" id="timePerEmail" min="1" max="120" value="15" required>
+                <span class="roi-input-help">Time to download, organize, and process each email</span>
+              </div>
+              <div class="roi-input">
+                <label for="employeeRate">Employee hourly rate ($)</label>
+                <input type="number" id="employeeRate" min="10" max="200" value="25" required>
+                <span class="roi-input-help">Fully-loaded hourly cost including benefits</span>
+              </div>
+              <div class="roi-input">
+                <label for="errorRate">Current error rate (%)</label>
+                <input type="number" id="errorRate" min="0" max="50" value="5" required>
+                <span class="roi-input-help">Percentage of emails requiring rework or corrections</span>
+              </div>
+            </div>
+
+            <!-- API Monitoring Inputs -->
+            <div id="apiInputs" class="roi-input-group" style="display: none;">
+              <div class="roi-input">
+                <label for="systemsMonitored">Critical systems monitored</label>
+                <input type="number" id="systemsMonitored" min="1" max="100" value="5" required>
+                <span class="roi-input-help">APIs, services, or systems critical to operations</span>
+              </div>
+              <div class="roi-input">
+                <label for="incidentsPerMonth">Downtime incidents per month</label>
+                <input type="number" id="incidentsPerMonth" min="0" max="50" value="3" required>
+                <span class="roi-input-help">Average monthly system outages or failures</span>
+              </div>
+              <div class="roi-input">
+                <label for="costPerHour">Cost per hour of downtime ($)</label>
+                <input type="number" id="costPerHour" min="100" max="50000" value="2500" required>
+                <span class="roi-input-help">Revenue lost + staff cost during outages</span>
+              </div>
+              <div class="roi-input">
+                <label for="monitoringHours">Manual monitoring hours per week</label>
+                <input type="number" id="monitoringHours" min="1" max="80" value="8" required>
+                <span class="roi-input-help">Staff time spent checking system health</span>
+              </div>
+            </div>
+
+            <!-- Integration Inputs -->
+            <div id="integrationInputs" class="roi-input-group" style="display: none;">
+              <div class="roi-input">
+                <label for="invoicesPerDay">Invoices processed daily</label>
+                <input type="number" id="invoicesPerDay" min="1" max="1000" value="50" required>
+                <span class="roi-input-help">ServiceTitan invoices requiring Xero entry</span>
+              </div>
+              <div class="roi-input">
+                <label for="reconciliationHours">Reconciliation hours per week</label>
+                <input type="number" id="reconciliationHours" min="1" max="80" value="12" required>
+                <span class="roi-input-help">Time spent matching ServiceTitan to Xero data</span>
+              </div>
+              <div class="roi-input">
+                <label for="accountingRate">Accounting staff hourly rate ($)</label>
+                <input type="number" id="accountingRate" min="15" max="150" value="35" required>
+                <span class="roi-input-help">Fully-loaded cost of accounting team</span>
+              </div>
+              <div class="roi-input">
+                <label for="reconciliationErrors">Reconciliation error rate (%)</label>
+                <input type="number" id="reconciliationErrors" min="0" max="50" value="8" required>
+                <span class="roi-input-help">Percentage requiring corrections or rework</span>
+              </div>
+            </div>
+          </div>
+
+          <button id="calculateROI" class="roi-btn roi-btn--primary">Calculate My ROI</button>
+        </div>
+
+        <!-- Step 3: Basic Results & Email Capture -->
+        <div id="roiStep3" class="roi-step" data-step="3">
+          <div class="roi-header">
+            <h2>Your ROI Preview</h2>
+            <p>Here's what automation could save your business:</p>
+          </div>
+
+          <div class="roi-preview-results">
+            <div class="roi-preview-card">
+              <div class="roi-preview-metric">
+                <span class="roi-preview-value" id="previewTimeSavings">0 hours</span>
+                <span class="roi-preview-label">Annual Time Savings</span>
+              </div>
+              <div class="roi-preview-metric">
+                <span class="roi-preview-value" id="previewCostSavings">$0</span>
+                <span class="roi-preview-label">Annual Cost Savings</span>
+              </div>
+            </div>
+            
+            <div class="roi-teaser">
+              <h3>Want the complete analysis?</h3>
+              <ul class="roi-unlock-features">
+                <li>✅ ROI percentage & payback period</li>
+                <li>✅ Detailed implementation roadmap</li>
+                <li>✅ Risk assessment & mitigation plan</li>
+                <li>✅ Custom recommendations for your business</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="roi-email-capture">
+            <h3>Get Your Complete ROI Report</h3>
+            <p>Enter your details to receive the full analysis:</p>
+            
+            <form class="roi-capture-form" id="roiCaptureForm">
+              <div class="roi-form-row">
+                <input type="text" id="contactName" placeholder="Your Name" required>
+                <input type="text" id="companyName" placeholder="Company Name" required>
+              </div>
+              <div class="roi-form-row">
+                <input type="email" id="contactEmail" placeholder="Business Email Address" required>
+                <input type="tel" id="contactPhone" placeholder="Phone (Optional)">
+              </div>
+              <button type="submit" class="roi-btn roi-btn--primary">Send Me The Complete Report</button>
+            </form>
+            
+            <p class="roi-privacy-note">🔒 Your information is secure. I'll send you the detailed ROI analysis and may follow up about implementation options.</p>
+          </div>
+        </div>
+
+        <!-- Step 4: Success & Next Steps -->
+        <div id="roiStep4" class="roi-step" data-step="4">
+          <div class="roi-success-header">
+            <div class="roi-success-icon">✅</div>
+            <h2>Report Sent Successfully!</h2>
+            <p>Check your email for the complete ROI analysis. Here are your immediate next steps:</p>
+          </div>
+
+          <div class="roi-next-actions">
+            <div class="roi-action-card roi-action-primary">
+              <h3>🗓️ Schedule Free Strategy Call</h3>
+              <p>Let's discuss your specific requirements and create a custom implementation plan.</p>
+              <button class="roi-btn roi-btn--primary" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'}); document.getElementById('roiCalculatorModal').style.display = 'none';">
+                Book 30-Min Consultation
+              </button>
+            </div>
+            
+            <div class="roi-action-card">
+              <h3>📋 Download Process Audit Template</h3>
+              <p>Use this checklist to identify additional automation opportunities in your business.</p>
+              <button class="roi-btn roi-btn--secondary" onclick="alert('Process audit template will be sent to your email within 24 hours.');">
+                Get Audit Template
+              </button>
+            </div>
+          </div>
+
+          <div class="roi-final-cta">
+            <h3>Ready to Start Saving Time and Money?</h3>
+            <p>Most clients see ROI within the first 60 days of implementation.</p>
+            <button class="roi-btn roi-btn--primary roi-btn--large" onclick="document.getElementById('contact').scrollIntoView({behavior: 'smooth'}); document.getElementById('roiCalculatorModal').style.display = 'none';">
+              Start Your Automation Project
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
   
   <script src="./index.js"></script>
 </body>

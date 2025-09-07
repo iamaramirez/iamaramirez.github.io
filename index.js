@@ -482,13 +482,342 @@ document.addEventListener('DOMContentLoaded', function() {
     });
 
     // ===== ROI CALCULATOR =====
+    const roiCalculator = document.getElementById('roiCalculatorModal');
     const roiCalculatorTriggers = document.querySelectorAll('.roi-calculator-trigger');
-    roiCalculatorTriggers.forEach(trigger => {
-        trigger.addEventListener('click', function() {
-            // ROI Calculator functionality - to be implemented
-            alert('ROI Calculator coming soon! Contact me for a personalized assessment.');
+    
+    if (roiCalculator && roiCalculatorTriggers.length > 0) {
+        let currentStep = 1;
+        let selectedSolution = null;
+        let calculatorData = {};
+        let calculatedResults = {};
+
+        // Modal elements
+        const roiModal = roiCalculator;
+        const roiOverlay = roiModal.querySelector('.roi-modal__overlay');
+        const roiCloseBtn = roiModal.querySelector('.roi-modal__close');
+        
+        // Step elements
+        const steps = roiModal.querySelectorAll('.roi-step');
+        
+        // Navigation buttons
+        const calculateBtn = roiModal.querySelector('#calculateROI');
+        
+        // Form elements
+        const solutionCards = roiModal.querySelectorAll('.roi-solution-card');
+        const captureForm = roiModal.querySelector('#roiCaptureForm');
+
+        // Calculation formulas
+        const calculationFormulas = {
+            email: function(emailsPerDay, timePerEmail, employeeRate, errorRate) {
+                const annualEmails = emailsPerDay * 365;
+                const totalMinutesPerYear = annualEmails * timePerEmail;
+                const totalHoursPerYear = totalMinutesPerYear / 60;
+                const timeSavings = totalHoursPerYear * 0.8; // 80% efficiency gain
+                const costSavings = timeSavings * employeeRate;
+                const errorReduction = (annualEmails * errorRate / 100) * (timePerEmail / 60) * employeeRate * 0.9; // 90% error reduction
+                
+                return {
+                    annualTimeSavings: Math.round(timeSavings),
+                    annualCostSavings: Math.round(costSavings + errorReduction),
+                    monthlyTimeSavings: Math.round(timeSavings / 12),
+                    monthlyCostSavings: Math.round((costSavings + errorReduction) / 12),
+                    roiPercentage: Math.round(((costSavings + errorReduction) / 15000) * 100), // $15k implementation
+                    paybackMonths: Math.round(15000 / ((costSavings + errorReduction) / 12))
+                };
+            },
+            api: function(systemsMonitored, incidentsPerMonth, costPerHour, monitoringHours) {
+                const annualDowntimeCost = (incidentsPerMonth * 12) * costPerHour * 2; // avg 2hrs per incident
+                const downtimeSavings = annualDowntimeCost * 0.9; // 90% reduction
+                const monitoringCostSavings = (monitoringHours * 52) * 45 * 0.9; // $45/hr IT staff, 90% reduction
+                const totalSavings = downtimeSavings + monitoringCostSavings;
+                
+                return {
+                    annualTimeSavings: Math.round((monitoringHours * 52) * 0.9),
+                    annualCostSavings: Math.round(totalSavings),
+                    monthlyTimeSavings: Math.round((monitoringHours * 52 * 0.9) / 12),
+                    monthlyCostSavings: Math.round(totalSavings / 12),
+                    roiPercentage: Math.round((totalSavings / 12000) * 100), // $12k implementation
+                    paybackMonths: Math.round(12000 / (totalSavings / 12))
+                };
+            },
+            integration: function(invoicesPerDay, reconciliationHours, accountingRate, reconciliationErrors) {
+                const annualReconciliationSavings = (reconciliationHours * 52) * accountingRate * 0.95; // 95% efficiency
+                const errorCostSavings = (invoicesPerDay * 365) * (reconciliationErrors / 100) * (10 / 60) * accountingRate; // 10min per error
+                const totalSavings = annualReconciliationSavings + errorCostSavings;
+                
+                return {
+                    annualTimeSavings: Math.round((reconciliationHours * 52) * 0.95),
+                    annualCostSavings: Math.round(totalSavings),
+                    monthlyTimeSavings: Math.round((reconciliationHours * 52 * 0.95) / 12),
+                    monthlyCostSavings: Math.round(totalSavings / 12),
+                    roiPercentage: Math.round((totalSavings / 25000) * 100), // $25k implementation
+                    paybackMonths: Math.round(25000 / (totalSavings / 12))
+                };
+            }
+        };
+
+        // Open calculator modal
+        function openROICalculator() {
+            roiModal.style.display = 'flex';
+            document.body.style.overflow = 'hidden';
+            showStep(1);
+        }
+
+        // Close calculator modal
+        function closeROICalculator() {
+            roiModal.style.display = 'none';
+            document.body.style.overflow = 'auto';
+            resetCalculator();
+        }
+
+        // Reset calculator
+        function resetCalculator() {
+            currentStep = 1;
+            selectedSolution = null;
+            calculatorData = {};
+            calculatedResults = {};
+            solutionCards.forEach(card => card.classList.remove('selected'));
+        }
+
+        // Show specific step
+        function showStep(stepNumber) {
+            steps.forEach(step => step.classList.remove('active'));
+            
+            const targetStep = roiModal.querySelector(`#roiStep${stepNumber}`);
+            if (targetStep) {
+                targetStep.classList.add('active');
+            }
+
+            // Update navigation visibility
+            const backBtns = roiModal.querySelectorAll('.roi-back-btn');
+            backBtns.forEach(btn => btn.style.display = stepNumber > 1 ? 'block' : 'none');
+
+            // Update step-specific content
+            if (stepNumber === 2) {
+                updateInputsForSolution();
+            }
+            
+            currentStep = stepNumber;
+        }
+
+        // Update inputs based on selected solution
+        function updateInputsForSolution() {
+            const allInputGroups = roiModal.querySelectorAll('.roi-input-group');
+            allInputGroups.forEach(group => group.style.display = 'none');
+            
+            const titleElement = roiModal.querySelector('#roiSolutionTitle');
+            
+            if (selectedSolution === 'email') {
+                document.getElementById('emailInputs').style.display = 'block';
+                if (titleElement) titleElement.textContent = 'Email Processing Automation';
+            } else if (selectedSolution === 'api') {
+                document.getElementById('apiInputs').style.display = 'block';
+                if (titleElement) titleElement.textContent = 'API Monitoring System';
+            } else if (selectedSolution === 'integration') {
+                document.getElementById('integrationInputs').style.display = 'block';
+                if (titleElement) titleElement.textContent = 'ServiceTitan-Xero Integration';
+            }
+        }
+
+        // Calculate ROI based on inputs
+        function calculateROI() {
+            if (!selectedSolution) {
+                alert('Please select a solution first');
+                return;
+            }
+
+            let results;
+
+            if (selectedSolution === 'email') {
+                const emailsPerDay = parseInt(document.getElementById('emailsPerDay').value) || 0;
+                const timePerEmail = parseInt(document.getElementById('timePerEmail').value) || 0;
+                const employeeRate = parseFloat(document.getElementById('employeeRate').value) || 0;
+                const errorRate = parseFloat(document.getElementById('errorRate').value) || 0;
+                
+                results = calculationFormulas.email(emailsPerDay, timePerEmail, employeeRate, errorRate);
+                calculatorData = { emailsPerDay, timePerEmail, employeeRate, errorRate };
+            } else if (selectedSolution === 'api') {
+                const systemsMonitored = parseInt(document.getElementById('systemsMonitored').value) || 0;
+                const incidentsPerMonth = parseInt(document.getElementById('incidentsPerMonth').value) || 0;
+                const costPerHour = parseFloat(document.getElementById('costPerHour').value) || 0;
+                const monitoringHours = parseInt(document.getElementById('monitoringHours').value) || 0;
+                
+                results = calculationFormulas.api(systemsMonitored, incidentsPerMonth, costPerHour, monitoringHours);
+                calculatorData = { systemsMonitored, incidentsPerMonth, costPerHour, monitoringHours };
+            } else if (selectedSolution === 'integration') {
+                const invoicesPerDay = parseInt(document.getElementById('invoicesPerDay').value) || 0;
+                const reconciliationHours = parseInt(document.getElementById('reconciliationHours').value) || 0;
+                const accountingRate = parseFloat(document.getElementById('accountingRate').value) || 0;
+                const reconciliationErrors = parseFloat(document.getElementById('reconciliationErrors').value) || 0;
+                
+                results = calculationFormulas.integration(invoicesPerDay, reconciliationHours, accountingRate, reconciliationErrors);
+                calculatorData = { invoicesPerDay, reconciliationHours, accountingRate, reconciliationErrors };
+            }
+
+            calculatedResults = results;
+            displayPreviewResults(results);
+            showStep(3);
+        }
+
+        // Display preview results
+        function displayPreviewResults(results) {
+            const timeSavingsEl = document.getElementById('previewTimeSavings');
+            const costSavingsEl = document.getElementById('previewCostSavings');
+            
+            if (timeSavingsEl) timeSavingsEl.textContent = `${results.annualTimeSavings.toLocaleString()}`;
+            if (costSavingsEl) costSavingsEl.textContent = `$${results.annualCostSavings.toLocaleString()}`;
+        }
+
+        // Handle form submission and send email
+        function handleFormSubmission(e) {
+            e.preventDefault();
+            
+            const name = document.getElementById('contactName').value;
+            const company = document.getElementById('companyName').value;
+            const email = document.getElementById('contactEmail').value;
+            const phone = document.getElementById('contactPhone').value || 'Not provided';
+
+            // Basic validation
+            if (!name || !company || !email) {
+                alert('Please fill in all required fields');
+                return;
+            }
+
+            // Email validation
+            const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+            if (!emailRegex.test(email)) {
+                alert('Please enter a valid email address');
+                return;
+            }
+
+            // Generate detailed email content
+            const solutionNames = {
+                email: 'Email Processing Automation',
+                api: 'API Monitoring System',
+                integration: 'ServiceTitan-Xero Integration'
+            };
+
+            const solutionName = solutionNames[selectedSolution];
+            const subject = `ROI Calculator Results - ${solutionName} - ${company}`;
+            
+            let inputDetails = '';
+            if (selectedSolution === 'email') {
+                inputDetails = `
+CURRENT PROCESS DETAILS:
+• Emails with attachments per day: ${calculatorData.emailsPerDay}
+• Minutes spent per email: ${calculatorData.timePerEmail}
+• Employee hourly rate: $${calculatorData.employeeRate}
+• Current error rate: ${calculatorData.errorRate}%`;
+            } else if (selectedSolution === 'api') {
+                inputDetails = `
+CURRENT PROCESS DETAILS:
+• Critical systems monitored: ${calculatorData.systemsMonitored}
+• Downtime incidents per month: ${calculatorData.incidentsPerMonth}
+• Cost per hour of downtime: $${calculatorData.costPerHour}
+• Manual monitoring hours per week: ${calculatorData.monitoringHours}`;
+            } else if (selectedSolution === 'integration') {
+                inputDetails = `
+CURRENT PROCESS DETAILS:
+• Invoices processed daily: ${calculatorData.invoicesPerDay}
+• Reconciliation hours per week: ${calculatorData.reconciliationHours}
+• Accounting staff hourly rate: $${calculatorData.accountingRate}
+• Reconciliation error rate: ${calculatorData.reconciliationErrors}%`;
+            }
+
+            const emailBody = `Hello Allan,
+
+A new lead has completed the ROI Calculator on your website:
+
+CONTACT INFORMATION:
+• Name: ${name}
+• Company: ${company}
+• Email: ${email}
+• Phone: ${phone}
+
+SOLUTION INTEREST: ${solutionName}
+${inputDetails}
+
+ROI CALCULATION RESULTS:
+• Annual Time Savings: ${calculatedResults.annualTimeSavings.toLocaleString()} hours
+• Annual Cost Savings: $${calculatedResults.annualCostSavings.toLocaleString()}
+• Monthly Time Savings: ${calculatedResults.monthlyTimeSavings.toLocaleString()} hours
+• Monthly Cost Savings: $${calculatedResults.monthlyCostSavings.toLocaleString()}
+• ROI Percentage: ${calculatedResults.roiPercentage}%
+• Payback Period: ${calculatedResults.paybackMonths} months
+
+NEXT STEPS:
+1. Send detailed ROI report to: ${email}
+2. Follow up within 24 hours for consultation scheduling
+3. Prepare solution-specific implementation plan
+
+This lead was generated on: ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}
+
+Best regards,
+Your Website ROI Calculator`;
+
+            // Create mailto link
+            const mailtoLink = `mailto:iamahlramz253@gmail.com?subject=${encodeURIComponent(subject)}&body=${encodeURIComponent(emailBody)}`;
+            
+            // Open email client
+            window.location.href = mailtoLink;
+            
+            // Show success step
+            showStep(4);
+            
+            // Track conversion
+            trackEvent('ROI Calculator - Lead Generated', `${selectedSolution}: ${company}`);
+        }
+
+        // Event listeners
+        roiCalculatorTriggers.forEach(trigger => {
+            trigger.addEventListener('click', openROICalculator);
         });
-    });
+
+        if (roiCloseBtn) roiCloseBtn.addEventListener('click', closeROICalculator);
+        if (roiOverlay) roiOverlay.addEventListener('click', closeROICalculator);
+
+        // Solution selection
+        solutionCards.forEach(card => {
+            card.addEventListener('click', function() {
+                solutionCards.forEach(c => c.classList.remove('selected'));
+                this.classList.add('selected');
+                selectedSolution = this.dataset.solution;
+                
+                // Auto-advance to step 2
+                setTimeout(() => {
+                    showStep(2);
+                }, 300);
+                
+                trackEvent('ROI Calculator - Solution Selected', selectedSolution);
+            });
+        });
+
+        // Back button navigation
+        document.addEventListener('click', function(e) {
+            if (e.target.classList.contains('roi-back-btn')) {
+                if (currentStep > 1) {
+                    showStep(currentStep - 1);
+                }
+            }
+        });
+
+        // Calculate button
+        if (calculateBtn) {
+            calculateBtn.addEventListener('click', calculateROI);
+        }
+
+        // Form submission
+        if (captureForm) {
+            captureForm.addEventListener('submit', handleFormSubmission);
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (roiModal.style.display === 'flex' && e.key === 'Escape') {
+                closeROICalculator();
+            }
+        });
+    }
 
     // ===== PLATFORM ANALYSIS DOWNLOAD =====
     const platformAnalysisTriggers = document.querySelectorAll('.platform-analysis-trigger');
