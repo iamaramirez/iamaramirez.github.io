@@ -1,7 +1,5 @@
 # Business Process Automation Portfolio
 
-Professional portfolio showcasing Microsoft Power Platform automation expertise and business process optimization solutions.
-
 ## About
 
 A Microsoft Power Platform specialist with ten years of experience in business process automation and application development. Expert in designing custom PowerApps (Canvas and Model-Driven) and creating automated workflows with Power Automate to streamline operations and eliminate manual processes. Proven expertise in integrating diverse business systems including SharePoint, Dataverse, SQL databases, and specialized platforms such as Xero, ServiceTitan, ServiceM8, and MYOB through APIs and custom connectors. Combines strong technical skills in PowerFx, data modeling, and integration techniques with business analysis capabilities to translate complex requirements into scalable, user-friendly applications. Demonstrates exceptional stakeholder collaboration and delivers solutions that drive measurable process improvements and operational efficiency across various industries. 
