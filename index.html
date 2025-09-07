@@ -672,7 +672,7 @@
       <div class="gallery__slide" data-project="superstore">
         <h3>Superstore Performance Dashboard</h3>
         <div class="gallery__slide-content">
-          <img src="./images/project-2.png" alt="Superstore Performance Dashboard" class="gallery__image">
+          <img src="./images/pbi-superstore-1-overview.jpg" alt="Superstore Performance Dashboard" class="gallery__image">
           <div class="gallery__details">
             <p>Executive-level dashboard tracking sales performance, profitability trends, and customer segmentation across multiple product categories. Features predictive analytics and automated anomaly detection.</p>
             <div class="roi-badge">15% profit increase</div>
@@ -683,7 +683,9 @@
               <li>Automated Alerts</li>
             </ul>
             <div class="gallery__actions">
-              <a href="#contact" class="btn btn--primary">Build Similar Dashboard</a>
+              <button class="btn btn--primary superstore-gallery-trigger">
+                View Dashboard Series
+              </button>
             </div>
           </div>
         </div>
@@ -712,7 +714,7 @@
       <div class="gallery__slide" data-project="northwind">
         <h3>Northwind Traders Executive Dashboard</h3>
         <div class="gallery__slide-content">
-          <img src="./images/project-2.png" alt="Northwind Traders Executive Dashboard" class="gallery__image">
+          <img src="./images/pbi-northwind-1-landing.jpg" alt="Northwind Traders Executive Dashboard" class="gallery__image">
           <div class="gallery__details">
             <p>Comprehensive executive dashboard providing strategic insights into trading operations, supplier performance, customer analytics, and financial KPIs. Features advanced drill-through capabilities and mobile optimization.</p>
             <div class="roi-badge">30% decision speed increase</div>
@@ -723,7 +725,9 @@
               <li>Executive Reporting</li>
             </ul>
             <div class="gallery__actions">
-              <a href="#contact" class="btn btn--primary">Design Executive Dashboard</a>
+              <button class="btn btn--primary northwind-gallery-trigger">
+                View Full Dashboard Suite
+              </button>
             </div>
           </div>
         </div>
@@ -779,6 +783,69 @@
         <span class="gallery__counter">1 / 4</span>
         <div class="gallery__dots">
           <button class="gallery__dot active"></button>
+          <button class="gallery__dot"></button>
+          <button class="gallery__dot"></button>
+          <button class="gallery__dot"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Superstore Detailed Gallery Modal -->
+  <div id="superstoreGallery" class="gallery-modal">
+    <div class="modal__overlay"></div>
+    <div class="modal__content">
+      <button class="modal__close">&times;</button>
+      <img src="" alt="" class="modal__image">
+      <p class="modal__caption"></p>
+      
+      <button class="gallery__btn gallery__btn--prev">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15,18 9,12 15,6"></polyline>
+        </svg>
+      </button>
+      
+      <button class="gallery__btn gallery__btn--next">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9,18 15,12 9,6"></polyline>
+        </svg>
+      </button>
+      
+      <div class="gallery__indicators">
+        <span class="gallery__counter">1 / 2</span>
+        <div class="gallery__dots">
+          <button class="gallery__dot active"></button>
+          <button class="gallery__dot"></button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Northwind Detailed Gallery Modal -->
+  <div id="northwindGallery" class="gallery-modal">
+    <div class="modal__overlay"></div>
+    <div class="modal__content">
+      <button class="modal__close">&times;</button>
+      <img src="" alt="" class="modal__image">
+      <p class="modal__caption"></p>
+      
+      <button class="gallery__btn gallery__btn--prev">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15,18 9,12 15,6"></polyline>
+        </svg>
+      </button>
+      
+      <button class="gallery__btn gallery__btn--next">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9,18 15,12 9,6"></polyline>
+        </svg>
+      </button>
+      
+      <div class="gallery__indicators">
+        <span class="gallery__counter">1 / 5</span>
+        <div class="gallery__dots">
+          <button class="gallery__dot active"></button>
+          <button class="gallery__dot"></button>
           <button class="gallery__dot"></button>
           <button class="gallery__dot"></button>
           <button class="gallery__dot"></button>
