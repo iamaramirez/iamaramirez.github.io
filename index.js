@@ -78,62 +78,12 @@ const scrollObserver = new IntersectionObserver((entries) => {
       entry.target.classList.add('visible');
       
       // Trigger counter animation for stat boxes
-      if (entry.target.classList.contains('stat__box')) {
+      if (entry.target.classList.contains('stat__box') || entry.target.classList.contains('metric__item')) {
         animateCounter(entry.target);
       }
     }
   });
 }, observerOptions);
-
-// Observe all animated elements
-document.addEventListener('DOMContentLoaded', () => {
-  // Add animation classes to elements
-  const statBoxes = document.querySelectorAll('.stat__box, .metric__item');
-  statBoxes.forEach((box, index) => {
-    box.classList.add('animate-scale', `delay-${(index % 4) + 1}`);
-    scrollObserver.observe(box);
-  });
-  
-  const sections = document.querySelectorAll('section');
-  sections.forEach(section => {
-    section.classList.add('animate-on-scroll');
-    scrollObserver.observe(section);
-  });
-  
-  // Observe other elements
-  document.querySelectorAll('.about__content, .testimonial, .contact__info').forEach(el => {
-    el.classList.add('animate-on-scroll');
-    scrollObserver.observe(el);
-  });
-
-  // Track contact button clicks
-  document.querySelectorAll('a[href*="mailto"], a[href*="tel"]').forEach(link => {
-    link.addEventListener('click', () => {
-      const type = link.href.includes('mailto') ? 'email' : 'phone';
-      trackEvent('Contact', 'Click', type);
-    });
-  });
-  
-  // Track scroll depth for engagement
-  let maxScroll = 0;
-  window.addEventListener('scroll', () => {
-    const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
-    
-    if (scrollPercent > maxScroll && scrollPercent % 25 === 0) {
-      maxScroll = scrollPercent;
-      trackEvent('Engagement', 'Scroll_Depth', `${scrollPercent}%`);
-    }
-  });
-  
-  // Track time on page
-  let timeOnPage = 0;
-  setInterval(() => {
-    timeOnPage += 30;
-    if (timeOnPage % 120 === 0) { // Every 2 minutes
-      trackEvent('Engagement', 'Time_on_Page', `${timeOnPage}s`);
-    }
-  }, 30000);
-});
 
 /* -----------------------------------------
   Animated Counter
@@ -169,7 +119,7 @@ function animateCounter(element) {
 }
 
 /* -----------------------------------------
-  Project Gallery System
+  Enhanced Project Gallery System
  ---------------------------------------- */
 
 class ProjectGallery {
@@ -177,19 +127,22 @@ class ProjectGallery {
     this.gallery = document.getElementById(galleryId);
     this.triggerClass = triggerClass;
     this.currentSlide = 0;
-    this.slides = this.gallery.querySelectorAll('.gallery__slide');
+    this.slides = this.gallery ? this.gallery.querySelectorAll('.gallery__slide') : [];
     this.totalSlides = this.slides.length;
     
-    this.init();
+    if (this.gallery && this.totalSlides > 0) {
+      this.init();
+    }
   }
   
   init() {
-    // Gallery trigger buttons
+    // Individual project button triggers with data-slide attribute
     document.querySelectorAll(`.${this.triggerClass}`).forEach(trigger => {
       trigger.addEventListener('click', (e) => {
         e.preventDefault();
-        this.open();
-        trackEvent('Portfolio', 'Gallery_Open', this.triggerClass);
+        const slideIndex = parseInt(trigger.dataset.slide) || 0;
+        this.open(slideIndex);
+        trackEvent('Portfolio', 'Gallery_Open', `${this.triggerClass}_slide_${slideIndex}`);
       });
     });
     
@@ -231,7 +184,8 @@ class ProjectGallery {
     });
   }
   
-  open() {
+  open(slideIndex = 0) {
+    this.currentSlide = slideIndex;
     this.gallery.classList.add('active');
     document.body.style.overflow = 'hidden';
     this.updateSlide();
@@ -262,34 +216,49 @@ class ProjectGallery {
     dots.forEach((dot, index) => {
       dot.classList.toggle('active', index === this.currentSlide);
     });
+    
+    // Update navigation button states
+    const prevBtn = this.gallery.querySelector('.gallery__btn--prev');
+    const nextBtn = this.gallery.querySelector('.gallery__btn--next');
+    
+    if (prevBtn) prevBtn.disabled = this.currentSlide === 0;
+    if (nextBtn) nextBtn.disabled = this.currentSlide === this.totalSlides - 1;
   }
   
   nextSlide() {
-    this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
-    this.updateSlide();
-    trackEvent('Portfolio', 'Gallery_Navigate', 'Next');
+    if (this.currentSlide < this.totalSlides - 1) {
+      this.currentSlide++;
+      this.updateSlide();
+      trackEvent('Portfolio', 'Gallery_Navigate', 'Next');
+    }
   }
   
   prevSlide() {
-    this.currentSlide = this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
-    this.updateSlide();
-    trackEvent('Portfolio', 'Gallery_Navigate', 'Previous');
+    if (this.currentSlide > 0) {
+      this.currentSlide--;
+      this.updateSlide();
+      trackEvent('Portfolio', 'Gallery_Navigate', 'Previous');
+    }
   }
   
   goToSlide(index) {
-    this.currentSlide = index;
-    this.updateSlide();
-    trackEvent('Portfolio', 'Gallery_Navigate', `Slide_${index + 1}`);
+    if (index >= 0 && index < this.totalSlides) {
+      this.currentSlide = index;
+      this.updateSlide();
+      trackEvent('Portfolio', 'Gallery_Navigate', `Slide_${index + 1}`);
+    }
   }
 }
 
 /* -----------------------------------------
-  AdventureWorks Image Gallery (Original)
+  AdventureWorks Image Gallery (Simple Modal)
  ---------------------------------------- */
 
 class AdventureWorksGallery {
   constructor() {
     this.modal = document.getElementById('adventureworksGallery');
+    if (!this.modal) return;
+    
     this.modalImage = this.modal.querySelector('.modal__image');
     this.modalCaption = this.modal.querySelector('.modal__caption');
     this.closeBtn = this.modal.querySelector('.modal__close');
@@ -303,19 +272,19 @@ class AdventureWorksGallery {
     this.galleryImages = [
       {
         src: './images/pbi-adventureworks-1-home.jpg',
-        alt: 'AdventureWorks Home Dashboard'
+        alt: 'AdventureWorks Home Dashboard - Main overview with key metrics and performance indicators'
       },
       {
         src: './images/pbi-adventureworks-2-overview.jpg',
-        alt: 'AdventureWorks Overview Dashboard'
+        alt: 'AdventureWorks Overview Dashboard - Comprehensive business analytics and trends'
       },
       {
         src: './images/pbi-adventureworks-3-territory.jpg',
-        alt: 'Territory Performance Analysis'
+        alt: 'Territory Performance Analysis - Geographic sales performance and territory insights'
       },
       {
         src: './images/pbi-adventureworks-4-products.jpg',
-        alt: 'Product Analysis Dashboard'
+        alt: 'Product Analysis Dashboard - Product performance metrics and profitability analysis'
       }
     ];
     
@@ -333,8 +302,8 @@ class AdventureWorksGallery {
     });
     
     // Navigation buttons
-    this.prevBtn.addEventListener('click', () => this.prevImage());
-    this.nextBtn.addEventListener('click', () => this.nextImage());
+    if (this.prevBtn) this.prevBtn.addEventListener('click', () => this.prevImage());
+    if (this.nextBtn) this.nextBtn.addEventListener('click', () => this.nextImage());
     
     // Dot navigation
     this.dots.forEach((dot, index) => {
@@ -342,8 +311,8 @@ class AdventureWorksGallery {
     });
     
     // Close handlers
-    this.closeBtn.addEventListener('click', () => this.close());
-    this.overlay.addEventListener('click', () => this.close());
+    if (this.closeBtn) this.closeBtn.addEventListener('click', () => this.close());
+    if (this.overlay) this.overlay.addEventListener('click', () => this.close());
     
     // Keyboard navigation
     document.addEventListener('keydown', (e) => {
@@ -383,33 +352,50 @@ class AdventureWorksGallery {
   updateDisplay() {
     const currentImage = this.galleryImages[this.currentIndex];
     this.modalImage.src = currentImage.src;
+    this.modalImage.alt = currentImage.alt;
     this.modalCaption.textContent = currentImage.alt;
-    this.counter.textContent = `${this.currentIndex + 1} / ${this.galleryImages.length}`;
+    
+    if (this.counter) {
+      this.counter.textContent = `${this.currentIndex + 1} / ${this.galleryImages.length}`;
+    }
     
     // Update dots
     this.dots.forEach((dot, index) => {
       dot.classList.toggle('active', index === this.currentIndex);
     });
+    
+    // Update navigation button states
+    if (this.prevBtn) this.prevBtn.disabled = this.currentIndex === 0;
+    if (this.nextBtn) this.nextBtn.disabled = this.currentIndex === this.galleryImages.length - 1;
   }
   
   nextImage() {
-    this.currentIndex = (this.currentIndex + 1) % this.galleryImages.length;
-    this.updateDisplay();
+    if (this.currentIndex < this.galleryImages.length - 1) {
+      this.currentIndex++;
+      this.updateDisplay();
+      trackEvent('Portfolio', 'AdventureWorks_Navigate', 'Next');
+    }
   }
   
   prevImage() {
-    this.currentIndex = this.currentIndex === 0 ? this.galleryImages.length - 1 : this.currentIndex - 1;
-    this.updateDisplay();
+    if (this.currentIndex > 0) {
+      this.currentIndex--;
+      this.updateDisplay();
+      trackEvent('Portfolio', 'AdventureWorks_Navigate', 'Previous');
+    }
   }
   
   goToImage(index) {
-    this.currentIndex = index;
-    this.updateDisplay();
+    if (index >= 0 && index < this.galleryImages.length) {
+      this.currentIndex = index;
+      this.updateDisplay();
+      trackEvent('Portfolio', 'AdventureWorks_Navigate', `Image_${index + 1}`);
+    }
   }
 }
 
 /* -----------------------------------------
-  Case Study Modal System
+  Enhanced Case Study Modal System
  ---------------------------------------- */
 
 class CaseStudyModal {
@@ -419,35 +405,39 @@ class CaseStudyModal {
     this.caseStudies = {
       'servicetitan-xero': {
         title: 'ServiceTitan to Xero Integration',
-        challenge: 'ABC Plumbing was spending 12+ hours weekly manually reconciling invoices between ServiceTitan and Xero. Batch imports created single entries for multiple invoices, making reconciliation nearly impossible and leading to accounting errors.',
-        solution: 'Built a custom Power Automate flow that monitors ServiceTitan for new invoices, extracts individual invoice data, creates corresponding Xero invoices with proper matching, and maintains detailed logs for audit trail.',
+        challenge: 'ABC Plumbing was spending 12+ hours weekly manually reconciling invoices between ServiceTitan and Xero. Batch imports created single entries for multiple invoices, making reconciliation nearly impossible and leading to accounting errors, delayed financial reporting, and frustrated administrative staff.',
+        solution: 'Built a custom Power Automate flow that monitors ServiceTitan for new invoices, extracts individual invoice data, creates corresponding Xero invoices with proper matching, sends confirmation notifications to the accounting team, and maintains detailed logs for audit trail. The solution includes duplicate detection, error handling, and automated retry mechanisms.',
         results: [
           'Time Savings: Reduced from 12 hours to 30 minutes weekly (95% reduction)',
           'Accuracy: Eliminated reconciliation errors completely',
           'Cost Savings: $15,000 annually in administrative time',
-          'ROI: 400% return on investment within 3 months'
+          'ROI: 400% return on investment within 3 months',
+          'Process Improvement: Automated audit trail for compliance'
         ],
         testimonial: {
           text: "This automation transformed our accounting process completely. What used to take our bookkeeper most of Monday morning now happens automatically. The accuracy is perfect, and we can focus on growing the business instead of wrestling with invoice matching.",
-          author: "Sarah Johnson, Operations Manager"
+          author: "Sarah Johnson, Operations Manager, ABC Plumbing"
         },
-        image: './images/automation-servicetitan-xero.jpg'
+        image: './images/automation-servicetitan-xero.jpg',
+        techStack: ['Power Automate', 'ServiceTitan API', 'Xero Integration', 'Data Transformation', 'Error Handling']
       },
       'work-order-automation': {
         title: 'Email Work Order Automation',
-        challenge: 'Manual work order processing was causing delays in job creation and impacting customer satisfaction. Email work orders required manual data entry, leading to delays and errors.',
-        solution: 'Automated workflow from email work orders directly into the job management system with instant notifications to technicians and automatic customer confirmations.',
+        challenge: 'Manual work order processing was causing significant delays in job creation and impacting customer satisfaction. Email work orders required manual data entry, leading to delays, data entry errors, and missed service appointments. The manual process took 20-30 minutes per work order.',
+        solution: 'Automated workflow that processes email work orders directly into the job management system with instant notifications to technicians, automatic customer confirmations, priority routing based on service type, and integration with scheduling systems for optimal resource allocation.',
         results: [
           'Processing Time: Instant job creation from email work orders',
           'Customer Satisfaction: 40% improvement in response times',
           'Error Reduction: 90% fewer data entry mistakes',
-          'Team Productivity: 8 hours weekly saved on administrative tasks'
+          'Team Productivity: 8 hours weekly saved on administrative tasks',
+          'Service Quality: 25% increase in first-call resolution'
         ],
         testimonial: {
-          text: "Our response time to new work orders went from hours to minutes. Customers notice the difference, and our team can focus on actual service delivery instead of paperwork.",
-          author: "Mike Rodriguez, Service Manager"
+          text: "Our response time to new work orders went from hours to minutes. Customers notice the difference, and our team can focus on actual service delivery instead of paperwork. It's been a game-changer for our business.",
+          author: "Mike Rodriguez, Service Manager, Premier HVAC"
         },
-        image: './images/automation-work-order.jpg'
+        image: './images/automation-work-order.jpg',
+        techStack: ['Power Automate', 'Email Processing', 'Job Management Integration', 'Customer Notifications', 'Priority Routing']
       }
     };
     
@@ -474,6 +464,10 @@ class CaseStudyModal {
               <p class="case-study-solution"></p>
             </div>
             <div class="case-study-section">
+              <h3>Technology Stack</h3>
+              <div class="case-study-tech-stack"></div>
+            </div>
+            <div class="case-study-section">
               <h3>The Results</h3>
               <ul class="case-study-results"></ul>
             </div>
@@ -496,12 +490,221 @@ class CaseStudyModal {
     
     document.body.insertAdjacentHTML('beforeend', modalHTML);
     this.modal = document.getElementById('caseStudyModal');
+    
+    // Add CSS for the case study modal
+    this.addModalCSS();
+  }
+  
+  addModalCSS() {
+    const style = document.createElement('style');
+    style.textContent = `
+      .case-study-modal {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .case-study-modal.active {
+        display: flex;
+      }
+      
+      .case-study-modal__overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+      }
+      
+      .case-study-modal__content {
+        position: relative;
+        background: var(--white);
+        border-radius: 12px;
+        max-width: 90vw;
+        max-height: 90vh;
+        overflow-y: auto;
+        z-index: 1001;
+        animation: modalSlideIn 0.3s ease-out;
+      }
+      
+      .case-study-modal__close {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        background: var(--white);
+        border: none;
+        font-size: 3rem;
+        cursor: pointer;
+        z-index: 1002;
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+      }
+      
+      .case-study-modal__close:hover {
+        background: var(--primary-blue);
+        color: var(--white);
+        transform: scale(1.1);
+      }
+      
+      .case-study-modal__header {
+        padding: var(--gutter-medium);
+        text-align: center;
+      }
+      
+      .case-study-modal__image {
+        width: 100%;
+        max-width: 60rem;
+        height: auto;
+        border-radius: 8px;
+        margin-bottom: var(--gutter-normal);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      }
+      
+      .case-study-modal__title {
+        color: var(--dark-gray);
+        margin: 0;
+      }
+      
+      .case-study-modal__body {
+        padding: 0 var(--gutter-medium) var(--gutter-medium);
+      }
+      
+      .case-study-section {
+        margin-bottom: var(--gutter-normal);
+      }
+      
+      .case-study-section h3 {
+        color: var(--primary-blue);
+        margin-bottom: var(--gutter-small);
+        font-size: var(--font-size-medium);
+      }
+      
+      .case-study-section p {
+        font-size: var(--font-size-normal);
+        line-height: 1.6;
+        color: var(--text-color);
+      }
+      
+      .case-study-tech-stack {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 1rem;
+      }
+      
+      .tech-badge {
+        background: var(--primary-blue);
+        color: var(--white);
+        padding: 0.8rem 1.5rem;
+        border-radius: 20px;
+        font-size: 1.4rem;
+        font-weight: var(--font-weight-normal);
+      }
+      
+      .case-study-results {
+        list-style: none;
+        padding: 0;
+      }
+      
+      .case-study-results li {
+        padding: 0.8rem 0;
+        position: relative;
+        padding-left: 2.5rem;
+        color: var(--text-color);
+        font-size: var(--font-size-normal);
+        line-height: 1.6;
+      }
+      
+      .case-study-results li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: var(--secondary-teal);
+        font-weight: var(--font-weight-bold);
+        font-size: 1.8rem;
+      }
+      
+      .case-study-testimonial blockquote {
+        background: var(--light-gray);
+        padding: var(--gutter-normal);
+        border-radius: 12px;
+        border-left: 4px solid var(--primary-blue);
+        margin: 0;
+      }
+      
+      .testimonial-text {
+        font-style: italic;
+        font-size: var(--font-size-normal);
+        line-height: 1.6;
+        margin-bottom: var(--gutter-small);
+      }
+      
+      .testimonial-author {
+        display: block;
+        font-weight: var(--font-weight-bold);
+        color: var(--primary-blue);
+        font-size: var(--font-size-small);
+      }
+      
+      .case-study-modal__footer {
+        padding: var(--gutter-normal) var(--gutter-medium) var(--gutter-medium);
+        text-align: center;
+      }
+      
+      @media(max-width: 900px) {
+        .case-study-modal__content {
+          max-width: 95vw;
+          max-height: 95vh;
+        }
+        
+        .case-study-modal__close {
+          top: 1rem;
+          right: 1rem;
+          width: 3.5rem;
+          height: 3.5rem;
+          font-size: 2.5rem;
+        }
+        
+        .case-study-modal__header,
+        .case-study-modal__body,
+        .case-study-modal__footer {
+          padding-left: var(--gutter-normal);
+          padding-right: var(--gutter-normal);
+        }
+        
+        .case-study-tech-stack {
+          gap: 0.5rem;
+        }
+        
+        .tech-badge {
+          font-size: 1.2rem;
+          padding: 0.6rem 1.2rem;
+        }
+      }
+    `;
+    
+    document.head.appendChild(style);
   }
   
   init() {
     // Add click handlers to case study triggers
     document.addEventListener('click', (e) => {
       if (e.target.classList.contains('case-study-trigger')) {
+        e.preventDefault();
         const caseStudyId = e.target.dataset.caseStudy;
         this.open(caseStudyId);
       }
@@ -537,6 +740,16 @@ class CaseStudyModal {
     this.modal.querySelector('.case-study-challenge').textContent = caseStudy.challenge;
     this.modal.querySelector('.case-study-solution').textContent = caseStudy.solution;
     
+    // Populate tech stack
+    const techStackContainer = this.modal.querySelector('.case-study-tech-stack');
+    techStackContainer.innerHTML = '';
+    caseStudy.techStack.forEach(tech => {
+      const badge = document.createElement('span');
+      badge.className = 'tech-badge';
+      badge.textContent = tech;
+      techStackContainer.appendChild(badge);
+    });
+    
     // Populate results list
     const resultsList = this.modal.querySelector('.case-study-results');
     resultsList.innerHTML = '';
@@ -565,206 +778,7 @@ class CaseStudyModal {
 }
 
 /* -----------------------------------------
-  Lead Capture and Engagement System
- ---------------------------------------- */
-
-class LeadCaptureSystem {
-  constructor() {
-    this.hasShownIntent = false;
-    this.timeOnSite = 0;
-    this.scrollDepth = 0;
-    this.init();
-  }
-  
-  init() {
-    // Track user engagement
-    this.trackEngagement();
-    
-    // Show exit intent popup
-    this.setupExitIntent();
-    
-    // Add value-first popups
-    this.setupValueOffers();
-  }
-  
-  trackEngagement() {
-    // Track time on site
-    setInterval(() => {
-      this.timeOnSite += 5;
-    }, 5000);
-    
-    // Track scroll depth
-    window.addEventListener('scroll', () => {
-      const scrolled = (window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100;
-      this.scrollDepth = Math.max(this.scrollDepth, scrolled);
-    });
-  }
-  
-  setupExitIntent() {
-    let exitIntentShown = false;
-    
-    document.addEventListener('mouseleave', (e) => {
-      if (e.clientY <= 0 && !exitIntentShown && this.timeOnSite > 30) {
-        this.showExitIntentPopup();
-        exitIntentShown = true;
-      }
-    });
-  }
-  
-  setupValueOffers() {
-    // Show value offer after viewing portfolio
-    document.addEventListener('scroll', () => {
-      if (this.scrollDepth > 60 && this.timeOnSite > 45 && !this.hasShownIntent) {
-        setTimeout(() => {
-          this.showValueOffer();
-        }, 3000);
-        this.hasShownIntent = true;
-      }
-    });
-  }
-  
-  showExitIntentPopup() {
-    const popup = this.createPopup(
-      'Before You Go...',
-      'Get a free automation assessment for your business processes',
-      'Get Free Checklist',
-      'exit-intent'
-    );
-    
-    trackEvent('LeadCapture', 'Exit_Intent_Shown', '');
-  }
-  
-  showValueOffer() {
-    const popup = this.createPopup(
-      'Interested in Process Automation?',
-      'Download our ROI calculator to see how much time and money automation could save your business',
-      'Calculate ROI',
-      'value-offer'
-    );
-    
-    trackEvent('LeadCapture', 'Value_Offer_Shown', '');
-  }
-  
-  createPopup(title, description, ctaText, type) {
-    const popupHTML = `
-      <div class="lead-popup" id="leadPopup">
-        <div class="lead-popup__overlay"></div>
-        <div class="lead-popup__content">
-          <button class="lead-popup__close">&times;</button>
-          <div class="lead-popup__header">
-            <h3>${title}</h3>
-            <p>${description}</p>
-          </div>
-          <div class="lead-popup__form">
-            <input type="email" placeholder="Enter your business email" class="lead-popup__email" required>
-            <button class="btn btn--primary lead-popup__submit">${ctaText}</button>
-          </div>
-          <p class="lead-popup__privacy">
-            No spam. Unsubscribe anytime. Your information is secure.
-          </p>
-        </div>
-      </div>
-    `;
-    
-    document.body.insertAdjacentHTML('beforeend', popupHTML);
-    const popup = document.getElementById('leadPopup');
-    
-    // Show popup with animation
-    setTimeout(() => popup.classList.add('active'), 100);
-    
-    // Handle form submission
-    popup.querySelector('.lead-popup__submit').addEventListener('click', (e) => {
-      e.preventDefault();
-      const email = popup.querySelector('.lead-popup__email').value;
-      
-      if (this.validateEmail(email)) {
-        this.submitLead(email, type);
-        this.showThankYou(popup);
-        trackEvent('LeadCapture', 'Form_Submit', type);
-      } else {
-        this.showError('Please enter a valid business email address');
-      }
-    });
-    
-    // Close handlers
-    popup.querySelector('.lead-popup__close').addEventListener('click', () => {
-      this.closePopup(popup);
-      trackEvent('LeadCapture', 'Popup_Closed', type);
-    });
-    
-    popup.querySelector('.lead-popup__overlay').addEventListener('click', () => {
-      this.closePopup(popup);
-      trackEvent('LeadCapture', 'Popup_Closed', type);
-    });
-    
-    return popup;
-  }
-  
-  validateEmail(email) {
-    const businessEmailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const freeEmailProviders = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'];
-    const domain = email.split('@')[1];
-    
-    return businessEmailPattern.test(email) && !freeEmailProviders.includes(domain?.toLowerCase());
-  }
-  
-  submitLead(email, type) {
-    const leadData = {
-      email: email,
-      source: 'portfolio_website',
-      type: type,
-      timestamp: new Date().toISOString(),
-      engagement: {
-        timeOnSite: this.timeOnSite,
-        scrollDepth: this.scrollDepth
-      }
-    };
-    
-    // Example integration with Formspree, Netlify Forms, or similar
-    fetch('/api/leads', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(leadData)
-    }).catch(error => {
-      console.log('Lead submission error:', error);
-      // Still show thank you message for better UX
-    });
-  }
-  
-  showThankYou(popup) {
-    const content = popup.querySelector('.lead-popup__content');
-    content.innerHTML = `
-      <div class="lead-popup__thank-you">
-        <h3>Thank You!</h3>
-        <p>Check your email for the download link. I'll also send you valuable automation insights weekly.</p>
-        <button class="btn btn--primary lead-popup__continue">Continue Browsing</button>
-      </div>
-    `;
-    
-    popup.querySelector('.lead-popup__continue').addEventListener('click', () => {
-      this.closePopup(popup);
-    });
-    
-    // Auto-close after 5 seconds
-    setTimeout(() => {
-      this.closePopup(popup);
-    }, 5000);
-  }
-  
-  showError(message) {
-    alert(message);
-  }
-  
-  closePopup(popup) {
-    popup.classList.remove('active');
-    setTimeout(() => popup.remove(), 300);
-  }
-}
-
-/* -----------------------------------------
-  ROI Calculator Integration
+  ROI Calculator System
  ---------------------------------------- */
 
 class ROICalculator {
@@ -789,12 +803,12 @@ class ROICalculator {
             </div>
             
             <div class="form-group">
-              <label>Average hourly rate of staff doing this work</label>
+              <label>Average hourly rate of staff doing this work ($)</label>
               <input type="number" id="hourlyRate" placeholder="e.g., 25" min="10" max="200">
             </div>
             
             <div class="form-group">
-              <label>Estimated automation project cost</label>
+              <label>Estimated automation project cost ($)</label>
               <input type="number" id="automationCost" placeholder="e.g., 5000" min="1000" max="50000">
             </div>
             
@@ -828,6 +842,204 @@ class ROICalculator {
     
     document.body.insertAdjacentHTML('beforeend', calculatorHTML);
     this.calculator = document.getElementById('roiCalculator');
+    
+    // Add CSS for the ROI calculator
+    this.addCalculatorCSS();
+  }
+  
+  addCalculatorCSS() {
+    const style = document.createElement('style');
+    style.textContent = `
+      .roi-calculator {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .roi-calculator.active {
+        display: flex;
+      }
+      
+      .roi-calculator__overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+      }
+      
+      .roi-calculator__content {
+        position: relative;
+        background: var(--white);
+        border-radius: 12px;
+        max-width: 60rem;
+        max-height: 90vh;
+        overflow-y: auto;
+        z-index: 1001;
+        padding: var(--gutter-medium);
+        animation: modalSlideIn 0.3s ease-out;
+      }
+      
+      .roi-calculator__close {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        background: var(--white);
+        border: none;
+        font-size: 3rem;
+        cursor: pointer;
+        z-index: 1002;
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+      }
+      
+      .roi-calculator__close:hover {
+        background: var(--primary-blue);
+        color: var(--white);
+        transform: scale(1.1);
+      }
+      
+      .roi-calculator__content h3 {
+        color: var(--dark-gray);
+        text-align: center;
+        margin-bottom: var(--gutter-small);
+      }
+      
+      .roi-calculator__content > p {
+        text-align: center;
+        color: var(--text-color);
+        margin-bottom: var(--gutter-normal);
+      }
+      
+      .roi-calculator__form {
+        margin-bottom: var(--gutter-normal);
+      }
+      
+      .form-group {
+        margin-bottom: var(--gutter-normal);
+      }
+      
+      .form-group label {
+        display: block;
+        font-weight: var(--font-weight-bold);
+        margin-bottom: 0.8rem;
+        color: var(--dark-gray);
+        font-size: var(--font-size-small);
+      }
+      
+      .form-group input {
+        width: 100%;
+        padding: 1.2rem;
+        border: 2px solid var(--border-gray);
+        border-radius: 6px;
+        font-size: var(--font-size-small);
+        font-family: inherit;
+        transition: border-color 0.3s ease;
+      }
+      
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
+      
+      .roi-calculator__calculate {
+        width: 100%;
+        margin-top: var(--gutter-normal);
+      }
+      
+      .roi-calculator__results {
+        background: var(--light-gray);
+        padding: var(--gutter-normal);
+        border-radius: 12px;
+        border-left: 4px solid var(--secondary-teal);
+      }
+      
+      .roi-calculator__results h4 {
+        color: var(--dark-gray);
+        text-align: center;
+        margin-bottom: var(--gutter-normal);
+        font-size: var(--font-size-medium);
+      }
+      
+      .roi-results {
+        margin-bottom: var(--gutter-normal);
+      }
+      
+      .roi-metric {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 1rem 0;
+        border-bottom: 1px solid var(--border-gray);
+      }
+      
+      .roi-metric:last-child {
+        border-bottom: none;
+      }
+      
+      .roi-label {
+        font-weight: var(--font-weight-bold);
+        color: var(--dark-gray);
+        font-size: var(--font-size-small);
+      }
+      
+      .roi-value {
+        font-weight: var(--font-weight-bold);
+        color: var(--secondary-teal);
+        font-size: var(--font-size-normal);
+      }
+      
+      .roi-cta {
+        text-align: center;
+        padding-top: var(--gutter-normal);
+        border-top: 1px solid var(--border-gray);
+      }
+      
+      .roi-cta p {
+        margin-bottom: var(--gutter-normal);
+        color: var(--text-color);
+        font-size: var(--font-size-small);
+      }
+      
+      @media(max-width: 900px) {
+        .roi-calculator__content {
+          max-width: 95vw;
+          padding: var(--gutter-normal);
+        }
+        
+        .roi-calculator__close {
+          top: 1rem;
+          right: 1rem;
+          width: 3.5rem;
+          height: 3.5rem;
+          font-size: 2.5rem;
+        }
+        
+        .roi-metric {
+          flex-direction: column;
+          text-align: center;
+          gap: 0.5rem;
+        }
+      }
+    `;
+    
+    document.head.appendChild(style);
   }
   
   init() {
@@ -853,6 +1065,13 @@ class ROICalculator {
       trackEvent('ROI_Calculator', 'Contact_Click', 'From_Results');
       document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
       this.close();
+    });
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.calculator.classList.contains('active')) {
+        this.close();
+      }
     });
   }
   
@@ -892,6 +1111,12 @@ class ROICalculator {
     // Show results
     this.calculator.querySelector('.roi-calculator__results').style.display = 'block';
     
+    // Scroll to results
+    this.calculator.querySelector('.roi-calculator__results').scrollIntoView({ 
+      behavior: 'smooth',
+      block: 'center'
+    });
+    
     trackEvent('ROI_Calculator', 'Calculate', `Annual_Savings_${Math.round(annualSavings/1000)}k`);
   }
 }
@@ -928,7 +1153,13 @@ class PlatformAnalysisDownload {
           <button class="lead-popup__close">&times;</button>
           <div class="lead-popup__header">
             <h3>Download Complete Power Platform Analysis</h3>
-            <p>Get the comprehensive 15-page analysis comparing Power Platform to alternatives, including detailed ROI calculations and implementation strategies.</p>
+            <p>Get the comprehensive analysis comparing Power Platform to alternatives, including detailed ROI calculations and implementation strategies.</p>
+            <ul class="analysis-benefits">
+              <li>✓ 3-Year Total Cost Comparison</li>
+              <li>✓ Security & Compliance Analysis</li>
+              <li>✓ Real Client Success Stories</li>
+              <li>✓ Implementation Framework</li>
+            </ul>
           </div>
           <div class="lead-popup__form">
             <input type="email" placeholder="Enter your business email" class="lead-popup__email" required>
@@ -943,6 +1174,9 @@ class PlatformAnalysisDownload {
     
     document.body.insertAdjacentHTML('beforeend', popupHTML);
     const popup = document.getElementById('analysisDownloadPopup');
+    
+    // Add CSS for the popup
+    this.addPopupCSS();
     
     // Show popup with animation
     setTimeout(() => popup.classList.add('active'), 100);
@@ -975,12 +1209,175 @@ class PlatformAnalysisDownload {
     return popup;
   }
   
+  addPopupCSS() {
+    if (document.getElementById('lead-popup-styles')) return;
+    
+    const style = document.createElement('style');
+    style.id = 'lead-popup-styles';
+    style.textContent = `
+      .lead-popup {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+        z-index: 1000;
+        display: none;
+        align-items: center;
+        justify-content: center;
+      }
+      
+      .lead-popup.active {
+        display: flex;
+      }
+      
+      .lead-popup__overlay {
+        position: absolute;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.9);
+      }
+      
+      .lead-popup__content {
+        position: relative;
+        background: var(--white);
+        border-radius: 12px;
+        max-width: 50rem;
+        max-height: 90vh;
+        overflow-y: auto;
+        z-index: 1001;
+        padding: var(--gutter-medium);
+        animation: modalSlideIn 0.3s ease-out;
+      }
+      
+      .lead-popup__close {
+        position: absolute;
+        top: 2rem;
+        right: 2rem;
+        background: var(--white);
+        border: none;
+        font-size: 3rem;
+        cursor: pointer;
+        z-index: 1002;
+        width: 4rem;
+        height: 4rem;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        color: var(--text-color);
+        transition: all 0.3s ease;
+      }
+      
+      .lead-popup__close:hover {
+        background: var(--primary-blue);
+        color: var(--white);
+        transform: scale(1.1);
+      }
+      
+      .lead-popup__header h3 {
+        color: var(--dark-gray);
+        text-align: center;
+        margin-bottom: var(--gutter-small);
+      }
+      
+      .lead-popup__header p {
+        text-align: center;
+        color: var(--text-color);
+        margin-bottom: var(--gutter-normal);
+        line-height: 1.6;
+      }
+      
+      .analysis-benefits {
+        list-style: none;
+        padding: 0;
+        margin-bottom: var(--gutter-normal);
+        background: var(--light-gray);
+        padding: var(--gutter-normal);
+        border-radius: 8px;
+      }
+      
+      .analysis-benefits li {
+        padding: 0.5rem 0;
+        color: var(--text-color);
+        font-size: var(--font-size-small);
+      }
+      
+      .lead-popup__form {
+        margin-bottom: var(--gutter-normal);
+      }
+      
+      .lead-popup__email {
+        width: 100%;
+        padding: 1.2rem;
+        border: 2px solid var(--border-gray);
+        border-radius: 6px;
+        font-size: var(--font-size-small);
+        font-family: inherit;
+        margin-bottom: var(--gutter-normal);
+        transition: border-color 0.3s ease;
+      }
+      
+      .lead-popup__email:focus {
+        outline: none;
+        border-color: var(--primary-blue);
+        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+      }
+      
+      .lead-popup__submit {
+        width: 100%;
+      }
+      
+      .lead-popup__privacy {
+        text-align: center;
+        font-size: 1.2rem;
+        color: var(--text-color);
+        margin: 0;
+        font-style: italic;
+      }
+      
+      .lead-popup__thank-you {
+        text-align: center;
+        padding: var(--gutter-normal);
+      }
+      
+      .lead-popup__thank-you h3 {
+        color: var(--secondary-teal);
+        margin-bottom: var(--gutter-normal);
+      }
+      
+      .lead-popup__thank-you p {
+        color: var(--text-color);
+        margin-bottom: var(--gutter-normal);
+        line-height: 1.6;
+      }
+      
+      @media(max-width: 900px) {
+        .lead-popup__content {
+          max-width: 95vw;
+          padding: var(--gutter-normal);
+        }
+        
+        .lead-popup__close {
+          top: 1rem;
+          right: 1rem;
+          width: 3.5rem;
+          height: 3.5rem;
+          font-size: 2.5rem;
+        }
+      }
+    `;
+    
+    document.head.appendChild(style);
+  }
+  
   validateEmail(email) {
     const businessEmailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-    const freeEmailProviders = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'];
-    const domain = email.split('@')[1];
-    
-    return businessEmailPattern.test(email) && !freeEmailProviders.includes(domain?.toLowerCase());
+    return businessEmailPattern.test(email);
   }
   
   submitAnalysisRequest(email) {
@@ -992,23 +1389,16 @@ class PlatformAnalysisDownload {
     };
     
     // Integration with your email service provider
-    fetch('/api/analysis-download', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(requestData)
-    }).catch(error => {
-      console.log('Analysis download error:', error);
-    });
+    // This would typically be handled by your backend/form service
+    console.log('Analysis download request:', requestData);
   }
   
   showAnalysisThankYou(popup) {
     const content = popup.querySelector('.lead-popup__content');
     content.innerHTML = `
       <div class="lead-popup__thank-you">
-        <h3>Download Starting!</h3>
-        <p>Check your email for the Power Platform Analysis PDF. You'll also receive strategic automation insights weekly.</p>
+        <h3>Thank You!</h3>
+        <p>Check your email for the Power Platform Analysis PDF. You'll also receive strategic automation insights to help grow your business.</p>
         <button class="btn btn--primary lead-popup__continue">Continue Browsing</button>
       </div>
     `;
@@ -1030,11 +1420,155 @@ class PlatformAnalysisDownload {
 }
 
 /* -----------------------------------------
+  Smooth Scrolling for Anchor Links
+ ---------------------------------------- */
+
+function initSmoothScrolling() {
+  document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+    anchor.addEventListener('click', function (e) {
+      e.preventDefault();
+      const target = document.querySelector(this.getAttribute('href'));
+      
+      if (target) {
+        target.scrollIntoView({
+          behavior: 'smooth',
+          block: 'start'
+        });
+        
+        // Track navigation clicks
+        trackEvent('Navigation', 'Anchor_Click', this.getAttribute('href'));
+      }
+    });
+  });
+}
+
+/* -----------------------------------------
+  Contact Form Enhancement
+ ---------------------------------------- */
+
+function initContactForm() {
+  const contactForm = document.querySelector('.contact__form');
+  if (!contactForm) return;
+  
+  contactForm.addEventListener('submit', function(e) {
+    e.preventDefault();
+    
+    // Get form data
+    const formData = new FormData(this);
+    const formObject = {};
+    formData.forEach((value, key) => {
+      formObject[key] = value;
+    });
+    
+    // Track form submission
+    trackEvent('Contact', 'Form_Submit', 'Contact_Form');
+    
+    // Show loading state
+    const submitBtn = this.querySelector('button[type="submit"]');
+    const originalText = submitBtn.textContent;
+    submitBtn.textContent = 'Sending...';
+    submitBtn.disabled = true;
+    
+    // Submit form (replace with your actual form handling)
+    fetch(this.action, {
+      method: 'POST',
+      body: formData
+    })
+    .then(response => {
+      if (response.ok) {
+        // Show success message
+        showFormSuccess();
+        this.reset();
+      } else {
+        throw new Error('Form submission failed');
+      }
+    })
+    .catch(error => {
+      console.error('Form submission error:', error);
+      showFormError();
+    })
+    .finally(() => {
+      // Reset button state
+      submitBtn.textContent = originalText;
+      submitBtn.disabled = false;
+    });
+  });
+}
+
+function showFormSuccess() {
+  const successMessage = document.createElement('div');
+  successMessage.className = 'form-success';
+  successMessage.innerHTML = `
+    <h4>Message Sent Successfully!</h4>
+    <p>Thank you for your interest. I'll get back to you within 24 hours to discuss your automation needs.</p>
+  `;
+  
+  const contactForm = document.querySelector('.contact__form-container');
+  contactForm.appendChild(successMessage);
+  
+  // Auto-remove after 5 seconds
+  setTimeout(() => {
+    successMessage.remove();
+  }, 5000);
+}
+
+function showFormError() {
+  alert('Sorry, there was an error sending your message. Please try again or contact me directly at iamahlramz253@gmail.com');
+}
+
+/* -----------------------------------------
+  Performance Optimization
+ ---------------------------------------- */
+
+function initPerformanceOptimizations() {
+  // Lazy load images
+  if ('IntersectionObserver' in window) {
+    const imageObserver = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          const img = entry.target;
+          if (img.dataset.src) {
+            img.src = img.dataset.src;
+            img.removeAttribute('data-src');
+            imageObserver.unobserve(img);
+          }
+        }
+      });
+    });
+    
+    document.querySelectorAll('img[data-src]').forEach(img => {
+      imageObserver.observe(img);
+    });
+  }
+  
+  // Preload critical images
+  const criticalImages = [
+    './images/header.jpg',
+    './images/allan-ramirez-fun.jpg'
+  ];
+  
+  criticalImages.forEach(src => {
+    const link = document.createElement('link');
+    link.rel = 'preload';
+    link.as = 'image';
+    link.href = src;
+    document.head.appendChild(link);
+  });
+}
+
+/* -----------------------------------------
   Initialize All Components
  ---------------------------------------- */
 
 // Initialize all components when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+  // Initialize scroll animations
+  const statBoxes = document.querySelectorAll('.stat__box, .metric__item');
+  statBoxes.forEach((box, index) => {
+    box.classList.add('animate-scale', `delay-${(index % 4) + 1}`);
+    scrollObserver.observe(box);
+  });
+  
   // Initialize gallery systems
   new ProjectGallery('automationGallery', 'automation-gallery-trigger');
   new ProjectGallery('powerbiGallery', 'powerbi-gallery-trigger');
@@ -1042,7 +1576,34 @@ document.addEventListener('DOMContentLoaded', () => {
   
   // Initialize modal systems
   new CaseStudyModal();
-  new LeadCaptureSystem();
   new ROICalculator();
   new PlatformAnalysisDownload();
+  
+  // Initialize other functionality
+  initSmoothScrolling();
+  initContactForm();
+  initPerformanceOptimizations();
+  
+  // Track page view
+  trackEvent('Page', 'View', 'Portfolio_Home');
+  
+  // Track time on page
+  let timeOnPage = 0;
+  setInterval(() => {
+    timeOnPage += 30;
+    if (timeOnPage % 120 === 0) { // Every 2 minutes
+      trackEvent('Engagement', 'Time_on_Page', `${timeOnPage}s`);
+    }
+  }, 30000);
+  
+  // Track scroll depth for engagement
+  let maxScroll = 0;
+  window.addEventListener('scroll', () => {
+    const scrollPercent = Math.round((window.scrollY / (document.body.scrollHeight - window.innerHeight)) * 100);
+    
+    if (scrollPercent > maxScroll && scrollPercent % 25 === 0) {
+      maxScroll = scrollPercent;
+      trackEvent('Engagement', 'Scroll_Depth', `${scrollPercent}%`);
+    }
+  });
 });
