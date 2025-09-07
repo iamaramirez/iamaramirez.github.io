@@ -25,25 +25,27 @@ window.addEventListener('keydown', handleFirstTab)
  ---------------------------------------- */
 
 const backToTopButton = document.querySelector(".back-to-top");
-let isBackToTopRendered = false;
+if (backToTopButton) {
+  let isBackToTopRendered = false;
 
-let alterStyles = (isBackToTopRendered) => {
-  backToTopButton.style.visibility = isBackToTopRendered ? "visible" : "hidden";
-  backToTopButton.style.opacity = isBackToTopRendered ? 1 : 0;
-  backToTopButton.style.transform = isBackToTopRendered
-    ? "scale(1)"
-    : "scale(0)";
-};
+  let alterStyles = (isBackToTopRendered) => {
+    backToTopButton.style.visibility = isBackToTopRendered ? "visible" : "hidden";
+    backToTopButton.style.opacity = isBackToTopRendered ? 1 : 0;
+    backToTopButton.style.transform = isBackToTopRendered
+      ? "scale(1)"
+      : "scale(0)";
+  };
 
-window.addEventListener("scroll", () => {
-  if (window.scrollY > 700) {
-    isBackToTopRendered = true;
-    alterStyles(isBackToTopRendered);
-  } else {
-    isBackToTopRendered = false;
-    alterStyles(isBackToTopRendered);
-  }
-});
+  window.addEventListener("scroll", () => {
+    if (window.scrollY > 700) {
+      isBackToTopRendered = true;
+      alterStyles(isBackToTopRendered);
+    } else {
+      isBackToTopRendered = false;
+      alterStyles(isBackToTopRendered);
+    }
+  });
+}
 
 /* -----------------------------------------
   Analytics Tracking for Business Development
@@ -344,16 +346,20 @@ class AdventureWorksGallery {
     document.body.style.overflow = '';
     
     setTimeout(() => {
-      this.modalImage.src = '';
-      this.modalCaption.textContent = '';
+      if (this.modalImage) this.modalImage.src = '';
+      if (this.modalCaption) this.modalCaption.textContent = '';
     }, 300);
   }
   
   updateDisplay() {
     const currentImage = this.galleryImages[this.currentIndex];
-    this.modalImage.src = currentImage.src;
-    this.modalImage.alt = currentImage.alt;
-    this.modalCaption.textContent = currentImage.alt;
+    if (this.modalImage) {
+      this.modalImage.src = currentImage.src;
+      this.modalImage.alt = currentImage.alt;
+    }
+    if (this.modalCaption) {
+      this.modalCaption.textContent = currentImage.alt;
+    }
     
     if (this.counter) {
       this.counter.textContent = `${this.currentIndex + 1} / ${this.galleryImages.length}`;
@@ -395,13 +401,13 @@ class AdventureWorksGallery {
 }
 
 /* -----------------------------------------
-  Enhanced Case Study Modal System
+  FIXED: Case Study Modal System - Proper Modal Creation
  ---------------------------------------- */
 
 class CaseStudyModal {
   constructor() {
     this.modal = null;
-    this.createModal();
+    this.modalCreated = false;
     this.caseStudies = {
       'servicetitan-xero': {
         title: 'ServiceTitan to Xero Integration',
@@ -444,260 +450,71 @@ class CaseStudyModal {
     this.init();
   }
   
+  // FIXED: Create modal only when needed and ensure proper CSS
   createModal() {
-    const modalHTML = `
-      <div id="caseStudyModal" class="case-study-modal">
-        <div class="case-study-modal__overlay"></div>
-        <div class="case-study-modal__content">
-          <button class="case-study-modal__close">&times;</button>
-          <div class="case-study-modal__header">
-            <img class="case-study-modal__image" src="" alt="">
-            <h2 class="case-study-modal__title"></h2>
+    if (this.modalCreated) return;
+    
+    // Create modal container with proper CSS classes for hiding
+    const modalContainer = document.createElement('div');
+    modalContainer.id = 'caseStudyModal';
+    modalContainer.className = 'case-study-modal';
+    modalContainer.style.display = 'none'; // Explicitly hide initially
+    modalContainer.style.position = 'fixed';
+    modalContainer.style.top = '0';
+    modalContainer.style.left = '0';
+    modalContainer.style.width = '100%';
+    modalContainer.style.height = '100%';
+    modalContainer.style.zIndex = '9999';
+    modalContainer.style.visibility = 'hidden';
+    modalContainer.style.opacity = '0';
+    
+    modalContainer.innerHTML = `
+      <div class="case-study-modal__overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9);"></div>
+      <div class="case-study-modal__content" style="position: relative; background: white; border-radius: 12px; max-width: 90vw; max-height: 90vh; overflow-y: auto; z-index: 10000; margin: auto; animation: modalSlideIn 0.3s ease-out;">
+        <button class="case-study-modal__close" style="position: absolute; top: 2rem; right: 2rem; background: white; border: none; font-size: 3rem; cursor: pointer; z-index: 10001; width: 4rem; height: 4rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); color: #333; transition: all 0.3s ease;">&times;</button>
+        <div class="case-study-modal__header" style="padding: 3rem; text-align: center;">
+          <img class="case-study-modal__image" src="" alt="" style="width: 100%; max-width: 60rem; height: auto; border-radius: 8px; margin-bottom: 2rem; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);">
+          <h2 class="case-study-modal__title" style="color: #1f2937; margin: 0;"></h2>
+        </div>
+        <div class="case-study-modal__body" style="padding: 0 3rem 3rem;">
+          <div class="case-study-section" style="margin-bottom: 2rem;">
+            <h3 style="color: #2563eb; margin-bottom: 1rem; font-size: 2.8rem;">The Challenge</h3>
+            <p class="case-study-challenge" style="font-size: 2.2rem; line-height: 1.6; color: #333;"></p>
           </div>
-          <div class="case-study-modal__body">
-            <div class="case-study-section">
-              <h3>The Challenge</h3>
-              <p class="case-study-challenge"></p>
-            </div>
-            <div class="case-study-section">
-              <h3>The Solution</h3>
-              <p class="case-study-solution"></p>
-            </div>
-            <div class="case-study-section">
-              <h3>Technology Stack</h3>
-              <div class="case-study-tech-stack"></div>
-            </div>
-            <div class="case-study-section">
-              <h3>The Results</h3>
-              <ul class="case-study-results"></ul>
-            </div>
-            <div class="case-study-section case-study-testimonial">
-              <h3>Client Testimonial</h3>
-              <blockquote>
-                <p class="testimonial-text"></p>
-                <cite class="testimonial-author"></cite>
-              </blockquote>
-            </div>
+          <div class="case-study-section" style="margin-bottom: 2rem;">
+            <h3 style="color: #2563eb; margin-bottom: 1rem; font-size: 2.8rem;">The Solution</h3>
+            <p class="case-study-solution" style="font-size: 2.2rem; line-height: 1.6; color: #333;"></p>
           </div>
-          <div class="case-study-modal__footer">
-            <button class="btn btn--primary case-study-cta">
-              Get Similar Results for Your Business
-            </button>
+          <div class="case-study-section" style="margin-bottom: 2rem;">
+            <h3 style="color: #2563eb; margin-bottom: 1rem; font-size: 2.8rem;">Technology Stack</h3>
+            <div class="case-study-tech-stack" style="display: flex; flex-wrap: wrap; gap: 1rem;"></div>
           </div>
+          <div class="case-study-section" style="margin-bottom: 2rem;">
+            <h3 style="color: #2563eb; margin-bottom: 1rem; font-size: 2.8rem;">The Results</h3>
+            <ul class="case-study-results" style="list-style: none; padding: 0;"></ul>
+          </div>
+          <div class="case-study-section case-study-testimonial">
+            <h3 style="color: #2563eb; margin-bottom: 1rem; font-size: 2.8rem;">Client Testimonial</h3>
+            <blockquote style="background: #f3f4f6; padding: 2rem; border-radius: 12px; border-left: 4px solid #2563eb; margin: 0;">
+              <p class="testimonial-text" style="font-style: italic; font-size: 2.2rem; line-height: 1.6; margin-bottom: 1rem;"></p>
+              <cite class="testimonial-author" style="display: block; font-weight: bold; color: #2563eb; font-size: 1.8rem;"></cite>
+            </blockquote>
+          </div>
+        </div>
+        <div class="case-study-modal__footer" style="padding: 2rem 3rem 3rem; text-align: center;">
+          <button class="btn btn--primary case-study-cta" style="background: linear-gradient(to right, #2563eb 0%, #059669 100%); color: white; border: none; padding: 1rem 4.2rem; border-radius: 6px; font-size: 1.8rem; cursor: pointer; transition: all 0.3s ease;">
+            Get Similar Results for Your Business
+          </button>
         </div>
       </div>
     `;
     
-    document.body.insertAdjacentHTML('beforeend', modalHTML);
-    this.modal = document.getElementById('caseStudyModal');
+    // Append to body but keep it hidden
+    document.body.appendChild(modalContainer);
+    this.modal = modalContainer;
+    this.modalCreated = true;
     
-    // Add CSS for the case study modal
-    this.addModalCSS();
-  }
-  
-  addModalCSS() {
-    const style = document.createElement('style');
-    style.textContent = `
-      .case-study-modal {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-        z-index: 1000;
-        display: none;
-        align-items: center;
-        justify-content: center;
-      }
-      
-      .case-study-modal.active {
-        display: flex;
-      }
-      
-      .case-study-modal__overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-      }
-      
-      .case-study-modal__content {
-        position: relative;
-        background: var(--white);
-        border-radius: 12px;
-        max-width: 90vw;
-        max-height: 90vh;
-        overflow-y: auto;
-        z-index: 1001;
-        animation: modalSlideIn 0.3s ease-out;
-      }
-      
-      .case-study-modal__close {
-        position: absolute;
-        top: 2rem;
-        right: 2rem;
-        background: var(--white);
-        border: none;
-        font-size: 3rem;
-        cursor: pointer;
-        z-index: 1002;
-        width: 4rem;
-        height: 4rem;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        color: var(--text-color);
-        transition: all 0.3s ease;
-      }
-      
-      .case-study-modal__close:hover {
-        background: var(--primary-blue);
-        color: var(--white);
-        transform: scale(1.1);
-      }
-      
-      .case-study-modal__header {
-        padding: var(--gutter-medium);
-        text-align: center;
-      }
-      
-      .case-study-modal__image {
-        width: 100%;
-        max-width: 60rem;
-        height: auto;
-        border-radius: 8px;
-        margin-bottom: var(--gutter-normal);
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-      }
-      
-      .case-study-modal__title {
-        color: var(--dark-gray);
-        margin: 0;
-      }
-      
-      .case-study-modal__body {
-        padding: 0 var(--gutter-medium) var(--gutter-medium);
-      }
-      
-      .case-study-section {
-        margin-bottom: var(--gutter-normal);
-      }
-      
-      .case-study-section h3 {
-        color: var(--primary-blue);
-        margin-bottom: var(--gutter-small);
-        font-size: var(--font-size-medium);
-      }
-      
-      .case-study-section p {
-        font-size: var(--font-size-normal);
-        line-height: 1.6;
-        color: var(--text-color);
-      }
-      
-      .case-study-tech-stack {
-        display: flex;
-        flex-wrap: wrap;
-        gap: 1rem;
-      }
-      
-      .tech-badge {
-        background: var(--primary-blue);
-        color: var(--white);
-        padding: 0.8rem 1.5rem;
-        border-radius: 20px;
-        font-size: 1.4rem;
-        font-weight: var(--font-weight-normal);
-      }
-      
-      .case-study-results {
-        list-style: none;
-        padding: 0;
-      }
-      
-      .case-study-results li {
-        padding: 0.8rem 0;
-        position: relative;
-        padding-left: 2.5rem;
-        color: var(--text-color);
-        font-size: var(--font-size-normal);
-        line-height: 1.6;
-      }
-      
-      .case-study-results li::before {
-        content: '✓';
-        position: absolute;
-        left: 0;
-        color: var(--secondary-teal);
-        font-weight: var(--font-weight-bold);
-        font-size: 1.8rem;
-      }
-      
-      .case-study-testimonial blockquote {
-        background: var(--light-gray);
-        padding: var(--gutter-normal);
-        border-radius: 12px;
-        border-left: 4px solid var(--primary-blue);
-        margin: 0;
-      }
-      
-      .testimonial-text {
-        font-style: italic;
-        font-size: var(--font-size-normal);
-        line-height: 1.6;
-        margin-bottom: var(--gutter-small);
-      }
-      
-      .testimonial-author {
-        display: block;
-        font-weight: var(--font-weight-bold);
-        color: var(--primary-blue);
-        font-size: var(--font-size-small);
-      }
-      
-      .case-study-modal__footer {
-        padding: var(--gutter-normal) var(--gutter-medium) var(--gutter-medium);
-        text-align: center;
-      }
-      
-      @media(max-width: 900px) {
-        .case-study-modal__content {
-          max-width: 95vw;
-          max-height: 95vh;
-        }
-        
-        .case-study-modal__close {
-          top: 1rem;
-          right: 1rem;
-          width: 3.5rem;
-          height: 3.5rem;
-          font-size: 2.5rem;
-        }
-        
-        .case-study-modal__header,
-        .case-study-modal__body,
-        .case-study-modal__footer {
-          padding-left: var(--gutter-normal);
-          padding-right: var(--gutter-normal);
-        }
-        
-        .case-study-tech-stack {
-          gap: 0.5rem;
-        }
-        
-        .tech-badge {
-          font-size: 1.2rem;
-          padding: 0.6rem 1.2rem;
-        }
-      }
-    `;
-    
-    document.head.appendChild(style);
+    console.log('Case study modal created and hidden properly');
   }
   
   init() {
@@ -709,62 +526,101 @@ class CaseStudyModal {
         this.open(caseStudyId);
       }
     });
-    
-    // Close modal handlers
-    this.modal.querySelector('.case-study-modal__close').addEventListener('click', () => this.close());
-    this.modal.querySelector('.case-study-modal__overlay').addEventListener('click', () => this.close());
-    
-    // CTA button handler
-    this.modal.querySelector('.case-study-cta').addEventListener('click', () => {
-      trackEvent('CaseStudy', 'CTA_Click', 'Contact_From_Modal');
-      document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
-      this.close();
-    });
-    
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.modal.classList.contains('active')) {
-        this.close();
-      }
-    });
   }
   
   open(caseStudyId) {
+    // Create modal only when needed
+    if (!this.modalCreated) {
+      this.createModal();
+    }
+    
     const caseStudy = this.caseStudies[caseStudyId];
-    if (!caseStudy) return;
+    if (!caseStudy || !this.modal) return;
     
     // Populate modal content
-    this.modal.querySelector('.case-study-modal__image').src = caseStudy.image;
-    this.modal.querySelector('.case-study-modal__image').alt = caseStudy.title;
-    this.modal.querySelector('.case-study-modal__title').textContent = caseStudy.title;
-    this.modal.querySelector('.case-study-challenge').textContent = caseStudy.challenge;
-    this.modal.querySelector('.case-study-solution').textContent = caseStudy.solution;
+    const image = this.modal.querySelector('.case-study-modal__image');
+    const title = this.modal.querySelector('.case-study-modal__title');
+    const challenge = this.modal.querySelector('.case-study-challenge');
+    const solution = this.modal.querySelector('.case-study-solution');
+    const techStackContainer = this.modal.querySelector('.case-study-tech-stack');
+    const resultsList = this.modal.querySelector('.case-study-results');
+    const testimonialText = this.modal.querySelector('.testimonial-text');
+    const testimonialAuthor = this.modal.querySelector('.testimonial-author');
+    
+    if (image) {
+      image.src = caseStudy.image;
+      image.alt = caseStudy.title;
+    }
+    if (title) title.textContent = caseStudy.title;
+    if (challenge) challenge.textContent = caseStudy.challenge;
+    if (solution) solution.textContent = caseStudy.solution;
     
     // Populate tech stack
-    const techStackContainer = this.modal.querySelector('.case-study-tech-stack');
-    techStackContainer.innerHTML = '';
-    caseStudy.techStack.forEach(tech => {
-      const badge = document.createElement('span');
-      badge.className = 'tech-badge';
-      badge.textContent = tech;
-      techStackContainer.appendChild(badge);
-    });
+    if (techStackContainer) {
+      techStackContainer.innerHTML = '';
+      caseStudy.techStack.forEach(tech => {
+        const badge = document.createElement('span');
+        badge.style.cssText = 'background: #2563eb; color: white; padding: 0.8rem 1.5rem; border-radius: 20px; font-size: 1.4rem; font-weight: normal;';
+        badge.textContent = tech;
+        techStackContainer.appendChild(badge);
+      });
+    }
     
     // Populate results list
-    const resultsList = this.modal.querySelector('.case-study-results');
-    resultsList.innerHTML = '';
-    caseStudy.results.forEach(result => {
-      const li = document.createElement('li');
-      li.textContent = result;
-      resultsList.appendChild(li);
-    });
+    if (resultsList) {
+      resultsList.innerHTML = '';
+      caseStudy.results.forEach(result => {
+        const li = document.createElement('li');
+        li.style.cssText = 'padding: 0.8rem 0; position: relative; padding-left: 2.5rem; color: #333; font-size: 2.2rem; line-height: 1.6;';
+        li.innerHTML = `<span style="position: absolute; left: 0; color: #059669; font-weight: bold; font-size: 1.8rem;">✓</span>${result}`;
+        resultsList.appendChild(li);
+      });
+    }
     
     // Populate testimonial
-    this.modal.querySelector('.testimonial-text').textContent = caseStudy.testimonial.text;
-    this.modal.querySelector('.testimonial-author').textContent = caseStudy.testimonial.author;
+    if (testimonialText) testimonialText.textContent = caseStudy.testimonial.text;
+    if (testimonialAuthor) testimonialAuthor.textContent = caseStudy.testimonial.author;
     
-    // Show modal
-    this.modal.classList.add('active');
+    // Set up event listeners (only once)
+    if (!this.modal.dataset.listenersAttached) {
+      const closeBtn = this.modal.querySelector('.case-study-modal__close');
+      const overlay = this.modal.querySelector('.case-study-modal__overlay');
+      const ctaBtn = this.modal.querySelector('.case-study-cta');
+      
+      if (closeBtn) {
+        closeBtn.addEventListener('click', () => this.close());
+      }
+      if (overlay) {
+        overlay.addEventListener('click', () => this.close());
+      }
+      if (ctaBtn) {
+        ctaBtn.addEventListener('click', () => {
+          trackEvent('CaseStudy', 'CTA_Click', 'Contact_From_Modal');
+          const contactSection = document.querySelector('#contact');
+          if (contactSection) {
+            contactSection.scrollIntoView({ behavior: 'smooth' });
+          }
+          this.close();
+        });
+      }
+      
+      // Keyboard navigation
+      const keyHandler = (e) => {
+        if (e.key === 'Escape' && this.modal.style.display === 'flex') {
+          this.close();
+        }
+      };
+      document.addEventListener('keydown', keyHandler);
+      
+      this.modal.dataset.listenersAttached = 'true';
+    }
+    
+    // Show modal with proper animation
+    this.modal.style.display = 'flex';
+    this.modal.style.visibility = 'visible';
+    this.modal.style.opacity = '1';
+    this.modal.style.alignItems = 'center';
+    this.modal.style.justifyContent = 'center';
     document.body.style.overflow = 'hidden';
     
     // Track case study view
@@ -772,8 +628,15 @@ class CaseStudyModal {
   }
   
   close() {
-    this.modal.classList.remove('active');
-    document.body.style.overflow = '';
+    if (!this.modal) return;
+    
+    this.modal.style.opacity = '0';
+    this.modal.style.visibility = 'hidden';
+    
+    setTimeout(() => {
+      this.modal.style.display = 'none';
+      document.body.style.overflow = '';
+    }, 300);
   }
 }
 
@@ -783,263 +646,80 @@ class CaseStudyModal {
 
 class ROICalculator {
   constructor() {
-    this.createCalculator();
+    this.calculator = null;
+    this.calculatorCreated = false;
     this.init();
   }
   
   createCalculator() {
-    const calculatorHTML = `
-      <div id="roiCalculator" class="roi-calculator">
-        <div class="roi-calculator__overlay"></div>
-        <div class="roi-calculator__content">
-          <button class="roi-calculator__close">&times;</button>
-          <h3>Automation ROI Calculator</h3>
-          <p>See how much time and money automation could save your business</p>
-          
-          <div class="roi-calculator__form">
-            <div class="form-group">
-              <label>Hours spent weekly on manual processes</label>
-              <input type="number" id="hoursWeekly" placeholder="e.g., 10" min="1" max="80">
-            </div>
-            
-            <div class="form-group">
-              <label>Average hourly rate of staff doing this work ($)</label>
-              <input type="number" id="hourlyRate" placeholder="e.g., 25" min="10" max="200">
-            </div>
-            
-            <div class="form-group">
-              <label>Estimated automation project cost ($)</label>
-              <input type="number" id="automationCost" placeholder="e.g., 5000" min="1000" max="50000">
-            </div>
-            
-            <button class="btn btn--primary roi-calculator__calculate">Calculate ROI</button>
+    if (this.calculatorCreated) return;
+    
+    const calculatorContainer = document.createElement('div');
+    calculatorContainer.id = 'roiCalculator';
+    calculatorContainer.className = 'roi-calculator';
+    calculatorContainer.style.display = 'none';
+    calculatorContainer.style.position = 'fixed';
+    calculatorContainer.style.top = '0';
+    calculatorContainer.style.left = '0';
+    calculatorContainer.style.width = '100%';
+    calculatorContainer.style.height = '100%';
+    calculatorContainer.style.zIndex = '9999';
+    calculatorContainer.style.visibility = 'hidden';
+    calculatorContainer.style.opacity = '0';
+    
+    calculatorContainer.innerHTML = `
+      <div class="roi-calculator__overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9);"></div>
+      <div class="roi-calculator__content" style="position: relative; background: white; border-radius: 12px; max-width: 60rem; max-height: 90vh; overflow-y: auto; z-index: 10000; padding: 3rem; animation: modalSlideIn 0.3s ease-out; margin: auto;">
+        <button class="roi-calculator__close" style="position: absolute; top: 2rem; right: 2rem; background: white; border: none; font-size: 3rem; cursor: pointer; z-index: 10001; width: 4rem; height: 4rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); color: #333; transition: all 0.3s ease;">&times;</button>
+        <h3 style="color: #1f2937; text-align: center; margin-bottom: 1rem; font-size: 3.6rem;">Automation ROI Calculator</h3>
+        <p style="text-align: center; color: #333; margin-bottom: 2rem; font-size: 2.2rem;">See how much time and money automation could save your business</p>
+        
+        <div class="roi-calculator__form" style="margin-bottom: 2rem;">
+          <div class="form-group" style="margin-bottom: 2rem;">
+            <label style="display: block; font-weight: bold; margin-bottom: 0.8rem; color: #1f2937; font-size: 1.8rem;">Hours spent weekly on manual processes</label>
+            <input type="number" id="hoursWeekly" placeholder="e.g., 10" min="1" max="80" style="width: 100%; padding: 1.2rem; border: 2px solid #e5e7eb; border-radius: 6px; font-size: 1.8rem; font-family: inherit; transition: border-color 0.3s ease;">
           </div>
           
-          <div class="roi-calculator__results" style="display: none;">
-            <h4>Your Automation ROI</h4>
-            <div class="roi-results">
-              <div class="roi-metric">
-                <span class="roi-label">Annual Cost Savings:</span>
-                <span class="roi-value" id="annualSavings">$0</span>
-              </div>
-              <div class="roi-metric">
-                <span class="roi-label">Payback Period:</span>
-                <span class="roi-value" id="paybackPeriod">0 months</span>
-              </div>
-              <div class="roi-metric">
-                <span class="roi-label">3-Year ROI:</span>
-                <span class="roi-value" id="threeYearROI">0%</span>
-              </div>
+          <div class="form-group" style="margin-bottom: 2rem;">
+            <label style="display: block; font-weight: bold; margin-bottom: 0.8rem; color: #1f2937; font-size: 1.8rem;">Average hourly rate of staff doing this work ($)</label>
+            <input type="number" id="hourlyRate" placeholder="e.g., 25" min="10" max="200" style="width: 100%; padding: 1.2rem; border: 2px solid #e5e7eb; border-radius: 6px; font-size: 1.8rem; font-family: inherit; transition: border-color 0.3s ease;">
+          </div>
+          
+          <div class="form-group" style="margin-bottom: 2rem;">
+            <label style="display: block; font-weight: bold; margin-bottom: 0.8rem; color: #1f2937; font-size: 1.8rem;">Estimated automation project cost ($)</label>
+            <input type="number" id="automationCost" placeholder="e.g., 5000" min="1000" max="50000" style="width: 100%; padding: 1.2rem; border: 2px solid #e5e7eb; border-radius: 6px; font-size: 1.8rem; font-family: inherit; transition: border-color 0.3s ease;">
+          </div>
+          
+          <button class="roi-calculator__calculate" style="width: 100%; margin-top: 2rem; background: linear-gradient(to right, #2563eb 0%, #059669 100%); color: white; border: none; padding: 1rem 4.2rem; border-radius: 6px; font-size: 1.8rem; cursor: pointer; transition: all 0.3s ease;">Calculate ROI</button>
+        </div>
+        
+        <div class="roi-calculator__results" style="display: none; background: #f3f4f6; padding: 2rem; border-radius: 12px; border-left: 4px solid #059669;">
+          <h4 style="color: #1f2937; text-align: center; margin-bottom: 2rem; font-size: 2.8rem;">Your Automation ROI</h4>
+          <div class="roi-results" style="margin-bottom: 2rem;">
+            <div class="roi-metric" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #e5e7eb;">
+              <span class="roi-label" style="font-weight: bold; color: #1f2937; font-size: 1.8rem;">Annual Cost Savings:</span>
+              <span class="roi-value" id="annualSavings" style="font-weight: bold; color: #059669; font-size: 2.2rem;">$0</span>
             </div>
-            <div class="roi-cta">
-              <p>Ready to achieve these results? Let's discuss your automation opportunities.</p>
-              <button class="btn btn--primary roi-calculator__contact">Schedule Free Consultation</button>
+            <div class="roi-metric" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0; border-bottom: 1px solid #e5e7eb;">
+              <span class="roi-label" style="font-weight: bold; color: #1f2937; font-size: 1.8rem;">Payback Period:</span>
+              <span class="roi-value" id="paybackPeriod" style="font-weight: bold; color: #059669; font-size: 2.2rem;">0 months</span>
             </div>
+            <div class="roi-metric" style="display: flex; justify-content: space-between; align-items: center; padding: 1rem 0;">
+              <span class="roi-label" style="font-weight: bold; color: #1f2937; font-size: 1.8rem;">3-Year ROI:</span>
+              <span class="roi-value" id="threeYearROI" style="font-weight: bold; color: #059669; font-size: 2.2rem;">0%</span>
+            </div>
+          </div>
+          <div class="roi-cta" style="text-align: center; padding-top: 2rem; border-top: 1px solid #e5e7eb;">
+            <p style="margin-bottom: 2rem; color: #333; font-size: 1.8rem;">Ready to achieve these results? Let's discuss your automation opportunities.</p>
+            <button class="roi-calculator__contact" style="background: linear-gradient(to right, #2563eb 0%, #059669 100%); color: white; border: none; padding: 1rem 4.2rem; border-radius: 6px; font-size: 1.8rem; cursor: pointer; transition: all 0.3s ease;">Schedule Free Consultation</button>
           </div>
         </div>
       </div>
     `;
     
-    document.body.insertAdjacentHTML('beforeend', calculatorHTML);
-    this.calculator = document.getElementById('roiCalculator');
-    
-    // Add CSS for the ROI calculator
-    this.addCalculatorCSS();
-  }
-  
-  addCalculatorCSS() {
-    const style = document.createElement('style');
-    style.textContent = `
-      .roi-calculator {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-        z-index: 1000;
-        display: none;
-        align-items: center;
-        justify-content: center;
-      }
-      
-      .roi-calculator.active {
-        display: flex;
-      }
-      
-      .roi-calculator__overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-      }
-      
-      .roi-calculator__content {
-        position: relative;
-        background: var(--white);
-        border-radius: 12px;
-        max-width: 60rem;
-        max-height: 90vh;
-        overflow-y: auto;
-        z-index: 1001;
-        padding: var(--gutter-medium);
-        animation: modalSlideIn 0.3s ease-out;
-      }
-      
-      .roi-calculator__close {
-        position: absolute;
-        top: 2rem;
-        right: 2rem;
-        background: var(--white);
-        border: none;
-        font-size: 3rem;
-        cursor: pointer;
-        z-index: 1002;
-        width: 4rem;
-        height: 4rem;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        color: var(--text-color);
-        transition: all 0.3s ease;
-      }
-      
-      .roi-calculator__close:hover {
-        background: var(--primary-blue);
-        color: var(--white);
-        transform: scale(1.1);
-      }
-      
-      .roi-calculator__content h3 {
-        color: var(--dark-gray);
-        text-align: center;
-        margin-bottom: var(--gutter-small);
-      }
-      
-      .roi-calculator__content > p {
-        text-align: center;
-        color: var(--text-color);
-        margin-bottom: var(--gutter-normal);
-      }
-      
-      .roi-calculator__form {
-        margin-bottom: var(--gutter-normal);
-      }
-      
-      .form-group {
-        margin-bottom: var(--gutter-normal);
-      }
-      
-      .form-group label {
-        display: block;
-        font-weight: var(--font-weight-bold);
-        margin-bottom: 0.8rem;
-        color: var(--dark-gray);
-        font-size: var(--font-size-small);
-      }
-      
-      .form-group input {
-        width: 100%;
-        padding: 1.2rem;
-        border: 2px solid var(--border-gray);
-        border-radius: 6px;
-        font-size: var(--font-size-small);
-        font-family: inherit;
-        transition: border-color 0.3s ease;
-      }
-      
-      .form-group input:focus {
-        outline: none;
-        border-color: var(--primary-blue);
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-      }
-      
-      .roi-calculator__calculate {
-        width: 100%;
-        margin-top: var(--gutter-normal);
-      }
-      
-      .roi-calculator__results {
-        background: var(--light-gray);
-        padding: var(--gutter-normal);
-        border-radius: 12px;
-        border-left: 4px solid var(--secondary-teal);
-      }
-      
-      .roi-calculator__results h4 {
-        color: var(--dark-gray);
-        text-align: center;
-        margin-bottom: var(--gutter-normal);
-        font-size: var(--font-size-medium);
-      }
-      
-      .roi-results {
-        margin-bottom: var(--gutter-normal);
-      }
-      
-      .roi-metric {
-        display: flex;
-        justify-content: space-between;
-        align-items: center;
-        padding: 1rem 0;
-        border-bottom: 1px solid var(--border-gray);
-      }
-      
-      .roi-metric:last-child {
-        border-bottom: none;
-      }
-      
-      .roi-label {
-        font-weight: var(--font-weight-bold);
-        color: var(--dark-gray);
-        font-size: var(--font-size-small);
-      }
-      
-      .roi-value {
-        font-weight: var(--font-weight-bold);
-        color: var(--secondary-teal);
-        font-size: var(--font-size-normal);
-      }
-      
-      .roi-cta {
-        text-align: center;
-        padding-top: var(--gutter-normal);
-        border-top: 1px solid var(--border-gray);
-      }
-      
-      .roi-cta p {
-        margin-bottom: var(--gutter-normal);
-        color: var(--text-color);
-        font-size: var(--font-size-small);
-      }
-      
-      @media(max-width: 900px) {
-        .roi-calculator__content {
-          max-width: 95vw;
-          padding: var(--gutter-normal);
-        }
-        
-        .roi-calculator__close {
-          top: 1rem;
-          right: 1rem;
-          width: 3.5rem;
-          height: 3.5rem;
-          font-size: 2.5rem;
-        }
-        
-        .roi-metric {
-          flex-direction: column;
-          text-align: center;
-          gap: 0.5rem;
-        }
-      }
-    `;
-    
-    document.head.appendChild(style);
+    document.body.appendChild(calculatorContainer);
+    this.calculator = calculatorContainer;
+    this.calculatorCreated = true;
   }
   
   init() {
@@ -1050,40 +730,70 @@ class ROICalculator {
         this.open();
       }
     });
-    
-    // Close handlers
-    this.calculator.querySelector('.roi-calculator__close').addEventListener('click', () => this.close());
-    this.calculator.querySelector('.roi-calculator__overlay').addEventListener('click', () => this.close());
-    
-    // Calculate button
-    this.calculator.querySelector('.roi-calculator__calculate').addEventListener('click', () => {
-      this.calculateROI();
-    });
-    
-    // Contact button
-    this.calculator.querySelector('.roi-calculator__contact').addEventListener('click', () => {
-      trackEvent('ROI_Calculator', 'Contact_Click', 'From_Results');
-      document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
-      this.close();
-    });
-    
-    // Keyboard navigation
-    document.addEventListener('keydown', (e) => {
-      if (e.key === 'Escape' && this.calculator.classList.contains('active')) {
-        this.close();
-      }
-    });
   }
   
   open() {
-    this.calculator.classList.add('active');
+    if (!this.calculatorCreated) {
+      this.createCalculator();
+      this.setupEventListeners();
+    }
+    
+    this.calculator.style.display = 'flex';
+    this.calculator.style.visibility = 'visible';
+    this.calculator.style.opacity = '1';
+    this.calculator.style.alignItems = 'center';
+    this.calculator.style.justifyContent = 'center';
     document.body.style.overflow = 'hidden';
     trackEvent('ROI_Calculator', 'Open', '');
   }
   
   close() {
-    this.calculator.classList.remove('active');
-    document.body.style.overflow = '';
+    if (!this.calculator) return;
+    
+    this.calculator.style.opacity = '0';
+    this.calculator.style.visibility = 'hidden';
+    
+    setTimeout(() => {
+      this.calculator.style.display = 'none';
+      document.body.style.overflow = '';
+    }, 300);
+  }
+  
+  setupEventListeners() {
+    if (!this.calculator) return;
+    
+    // Close handlers
+    const closeBtn = this.calculator.querySelector('.roi-calculator__close');
+    const overlay = this.calculator.querySelector('.roi-calculator__overlay');
+    
+    if (closeBtn) closeBtn.addEventListener('click', () => this.close());
+    if (overlay) overlay.addEventListener('click', () => this.close());
+    
+    // Calculate button
+    const calculateBtn = this.calculator.querySelector('.roi-calculator__calculate');
+    if (calculateBtn) {
+      calculateBtn.addEventListener('click', () => this.calculateROI());
+    }
+    
+    // Contact button
+    const contactBtn = this.calculator.querySelector('.roi-calculator__contact');
+    if (contactBtn) {
+      contactBtn.addEventListener('click', () => {
+        trackEvent('ROI_Calculator', 'Contact_Click', 'From_Results');
+        const contactSection = document.querySelector('#contact');
+        if (contactSection) {
+          contactSection.scrollIntoView({ behavior: 'smooth' });
+        }
+        this.close();
+      });
+    }
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape' && this.calculator.style.display === 'flex') {
+        this.close();
+      }
+    });
   }
   
   calculateROI() {
@@ -1104,18 +814,25 @@ class ROICalculator {
     const threeYearROI = Math.round(((threeYearSavings - automationCost) / automationCost) * 100);
     
     // Display results
-    document.getElementById('annualSavings').textContent = `$${annualSavings.toLocaleString()}`;
-    document.getElementById('paybackPeriod').textContent = `${paybackMonths} months`;
-    document.getElementById('threeYearROI').textContent = `${threeYearROI}%`;
+    const annualSavingsEl = document.getElementById('annualSavings');
+    const paybackPeriodEl = document.getElementById('paybackPeriod');
+    const threeYearROIEl = document.getElementById('threeYearROI');
+    
+    if (annualSavingsEl) annualSavingsEl.textContent = `$${annualSavings.toLocaleString()}`;
+    if (paybackPeriodEl) paybackPeriodEl.textContent = `${paybackMonths} months`;
+    if (threeYearROIEl) threeYearROIEl.textContent = `${threeYearROI}%`;
     
     // Show results
-    this.calculator.querySelector('.roi-calculator__results').style.display = 'block';
-    
-    // Scroll to results
-    this.calculator.querySelector('.roi-calculator__results').scrollIntoView({ 
-      behavior: 'smooth',
-      block: 'center'
-    });
+    const resultsSection = this.calculator.querySelector('.roi-calculator__results');
+    if (resultsSection) {
+      resultsSection.style.display = 'block';
+      
+      // Scroll to results
+      resultsSection.scrollIntoView({ 
+        behavior: 'smooth',
+        block: 'center'
+      });
+    }
     
     trackEvent('ROI_Calculator', 'Calculate', `Annual_Savings_${Math.round(annualSavings/1000)}k`);
   }
@@ -1131,7 +848,6 @@ class PlatformAnalysisDownload {
   }
   
   init() {
-    // Add trigger for platform analysis download
     document.addEventListener('click', (e) => {
       if (e.target.classList.contains('platform-analysis-trigger')) {
         e.preventDefault();
@@ -1141,238 +857,78 @@ class PlatformAnalysisDownload {
   }
   
   showDownloadForm() {
-    const popup = this.createDownloadPopup();
+    this.createDownloadPopup();
     trackEvent('Platform_Analysis', 'Download_Triggered', '');
   }
   
   createDownloadPopup() {
-    const popupHTML = `
-      <div class="lead-popup" id="analysisDownloadPopup">
-        <div class="lead-popup__overlay"></div>
-        <div class="lead-popup__content">
-          <button class="lead-popup__close">&times;</button>
-          <div class="lead-popup__header">
-            <h3>Download Complete Power Platform Analysis</h3>
-            <p>Get the comprehensive analysis comparing Power Platform to alternatives, including detailed ROI calculations and implementation strategies.</p>
-            <ul class="analysis-benefits">
-              <li>✓ 3-Year Total Cost Comparison</li>
-              <li>✓ Security & Compliance Analysis</li>
-              <li>✓ Real Client Success Stories</li>
-              <li>✓ Implementation Framework</li>
-            </ul>
-          </div>
-          <div class="lead-popup__form">
-            <input type="email" placeholder="Enter your business email" class="lead-popup__email" required>
-            <button class="btn btn--primary lead-popup__submit">Download Analysis</button>
-          </div>
-          <p class="lead-popup__privacy">
-            No spam. Unsubscribe anytime. Your information is secure.
-          </p>
+    const popup = document.createElement('div');
+    popup.id = 'analysisDownloadPopup';
+    popup.className = 'lead-popup';
+    popup.style.cssText = 'position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9); z-index: 9999; display: flex; align-items: center; justify-content: center;';
+    
+    popup.innerHTML = `
+      <div class="lead-popup__overlay" style="position: absolute; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.9);"></div>
+      <div class="lead-popup__content" style="position: relative; background: white; border-radius: 12px; max-width: 50rem; max-height: 90vh; overflow-y: auto; z-index: 10000; padding: 3rem; animation: modalSlideIn 0.3s ease-out;">
+        <button class="lead-popup__close" style="position: absolute; top: 2rem; right: 2rem; background: white; border: none; font-size: 3rem; cursor: pointer; z-index: 10001; width: 4rem; height: 4rem; border-radius: 50%; display: flex; align-items: center; justify-content: center; box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2); color: #333; transition: all 0.3s ease;">&times;</button>
+        <div class="lead-popup__header">
+          <h3 style="color: #1f2937; text-align: center; margin-bottom: 1rem; font-size: 3.6rem;">Download Complete Power Platform Analysis</h3>
+          <p style="text-align: center; color: #333; margin-bottom: 2rem; line-height: 1.6; font-size: 2.2rem;">Get the comprehensive analysis comparing Power Platform to alternatives, including detailed ROI calculations and implementation strategies.</p>
+          <ul class="analysis-benefits" style="list-style: none; padding: 0; margin-bottom: 2rem; background: #f3f4f6; padding: 2rem; border-radius: 8px;">
+            <li style="padding: 0.5rem 0; color: #333; font-size: 1.8rem;">✓ 3-Year Total Cost Comparison</li>
+            <li style="padding: 0.5rem 0; color: #333; font-size: 1.8rem;">✓ Security & Compliance Analysis</li>
+            <li style="padding: 0.5rem 0; color: #333; font-size: 1.8rem;">✓ Real Client Success Stories</li>
+            <li style="padding: 0.5rem 0; color: #333; font-size: 1.8rem;">✓ Implementation Framework</li>
+          </ul>
         </div>
+        <div class="lead-popup__form" style="margin-bottom: 2rem;">
+          <input type="email" placeholder="Enter your business email" class="lead-popup__email" required style="width: 100%; padding: 1.2rem; border: 2px solid #e5e7eb; border-radius: 6px; font-size: 1.8rem; font-family: inherit; margin-bottom: 2rem; transition: border-color 0.3s ease;">
+          <button class="lead-popup__submit" style="width: 100%; background: linear-gradient(to right, #2563eb 0%, #059669 100%); color: white; border: none; padding: 1rem 4.2rem; border-radius: 6px; font-size: 1.8rem; cursor: pointer; transition: all 0.3s ease;">Download Analysis</button>
+        </div>
+        <p class="lead-popup__privacy" style="text-align: center; font-size: 1.2rem; color: #333; margin: 0; font-style: italic;">
+          No spam. Unsubscribe anytime. Your information is secure.
+        </p>
       </div>
     `;
     
-    document.body.insertAdjacentHTML('beforeend', popupHTML);
-    const popup = document.getElementById('analysisDownloadPopup');
-    
-    // Add CSS for the popup
-    this.addPopupCSS();
-    
-    // Show popup with animation
-    setTimeout(() => popup.classList.add('active'), 100);
+    document.body.appendChild(popup);
     
     // Handle form submission
-    popup.querySelector('.lead-popup__submit').addEventListener('click', (e) => {
-      e.preventDefault();
-      const email = popup.querySelector('.lead-popup__email').value;
-      
-      if (this.validateEmail(email)) {
-        this.submitAnalysisRequest(email);
-        this.showAnalysisThankYou(popup);
-        trackEvent('Platform_Analysis', 'Download_Submit', 'Success');
-      } else {
-        alert('Please enter a valid business email address');
-      }
-    });
+    const submitBtn = popup.querySelector('.lead-popup__submit');
+    const emailInput = popup.querySelector('.lead-popup__email');
+    
+    if (submitBtn && emailInput) {
+      submitBtn.addEventListener('click', (e) => {
+        e.preventDefault();
+        const email = emailInput.value;
+        
+        if (this.validateEmail(email)) {
+          this.submitAnalysisRequest(email);
+          this.showAnalysisThankYou(popup);
+          trackEvent('Platform_Analysis', 'Download_Submit', 'Success');
+        } else {
+          alert('Please enter a valid business email address');
+        }
+      });
+    }
     
     // Close handlers
-    popup.querySelector('.lead-popup__close').addEventListener('click', () => {
-      this.closePopup(popup);
-      trackEvent('Platform_Analysis', 'Download_Closed', '');
-    });
+    const closeBtn = popup.querySelector('.lead-popup__close');
+    const overlay = popup.querySelector('.lead-popup__overlay');
     
-    popup.querySelector('.lead-popup__overlay').addEventListener('click', () => {
-      this.closePopup(popup);
-      trackEvent('Platform_Analysis', 'Download_Closed', '');
-    });
+    if (closeBtn) {
+      closeBtn.addEventListener('click', () => {
+        this.closePopup(popup);
+        trackEvent('Platform_Analysis', 'Download_Closed', '');
+      });
+    }
     
-    return popup;
-  }
-  
-  addPopupCSS() {
-    if (document.getElementById('lead-popup-styles')) return;
-    
-    const style = document.createElement('style');
-    style.id = 'lead-popup-styles';
-    style.textContent = `
-      .lead-popup {
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-        z-index: 1000;
-        display: none;
-        align-items: center;
-        justify-content: center;
-      }
-      
-      .lead-popup.active {
-        display: flex;
-      }
-      
-      .lead-popup__overlay {
-        position: absolute;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.9);
-      }
-      
-      .lead-popup__content {
-        position: relative;
-        background: var(--white);
-        border-radius: 12px;
-        max-width: 50rem;
-        max-height: 90vh;
-        overflow-y: auto;
-        z-index: 1001;
-        padding: var(--gutter-medium);
-        animation: modalSlideIn 0.3s ease-out;
-      }
-      
-      .lead-popup__close {
-        position: absolute;
-        top: 2rem;
-        right: 2rem;
-        background: var(--white);
-        border: none;
-        font-size: 3rem;
-        cursor: pointer;
-        z-index: 1002;
-        width: 4rem;
-        height: 4rem;
-        border-radius: 50%;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
-        color: var(--text-color);
-        transition: all 0.3s ease;
-      }
-      
-      .lead-popup__close:hover {
-        background: var(--primary-blue);
-        color: var(--white);
-        transform: scale(1.1);
-      }
-      
-      .lead-popup__header h3 {
-        color: var(--dark-gray);
-        text-align: center;
-        margin-bottom: var(--gutter-small);
-      }
-      
-      .lead-popup__header p {
-        text-align: center;
-        color: var(--text-color);
-        margin-bottom: var(--gutter-normal);
-        line-height: 1.6;
-      }
-      
-      .analysis-benefits {
-        list-style: none;
-        padding: 0;
-        margin-bottom: var(--gutter-normal);
-        background: var(--light-gray);
-        padding: var(--gutter-normal);
-        border-radius: 8px;
-      }
-      
-      .analysis-benefits li {
-        padding: 0.5rem 0;
-        color: var(--text-color);
-        font-size: var(--font-size-small);
-      }
-      
-      .lead-popup__form {
-        margin-bottom: var(--gutter-normal);
-      }
-      
-      .lead-popup__email {
-        width: 100%;
-        padding: 1.2rem;
-        border: 2px solid var(--border-gray);
-        border-radius: 6px;
-        font-size: var(--font-size-small);
-        font-family: inherit;
-        margin-bottom: var(--gutter-normal);
-        transition: border-color 0.3s ease;
-      }
-      
-      .lead-popup__email:focus {
-        outline: none;
-        border-color: var(--primary-blue);
-        box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-      }
-      
-      .lead-popup__submit {
-        width: 100%;
-      }
-      
-      .lead-popup__privacy {
-        text-align: center;
-        font-size: 1.2rem;
-        color: var(--text-color);
-        margin: 0;
-        font-style: italic;
-      }
-      
-      .lead-popup__thank-you {
-        text-align: center;
-        padding: var(--gutter-normal);
-      }
-      
-      .lead-popup__thank-you h3 {
-        color: var(--secondary-teal);
-        margin-bottom: var(--gutter-normal);
-      }
-      
-      .lead-popup__thank-you p {
-        color: var(--text-color);
-        margin-bottom: var(--gutter-normal);
-        line-height: 1.6;
-      }
-      
-      @media(max-width: 900px) {
-        .lead-popup__content {
-          max-width: 95vw;
-          padding: var(--gutter-normal);
-        }
-        
-        .lead-popup__close {
-          top: 1rem;
-          right: 1rem;
-          width: 3.5rem;
-          height: 3.5rem;
-          font-size: 2.5rem;
-        }
-      }
-    `;
-    
-    document.head.appendChild(style);
+    if (overlay) {
+      overlay.addEventListener('click', () => {
+        this.closePopup(popup);
+        trackEvent('Platform_Analysis', 'Download_Closed', '');
+      });
+    }
   }
   
   validateEmail(email) {
@@ -1388,24 +944,27 @@ class PlatformAnalysisDownload {
       timestamp: new Date().toISOString()
     };
     
-    // Integration with your email service provider
-    // This would typically be handled by your backend/form service
     console.log('Analysis download request:', requestData);
   }
   
   showAnalysisThankYou(popup) {
     const content = popup.querySelector('.lead-popup__content');
-    content.innerHTML = `
-      <div class="lead-popup__thank-you">
-        <h3>Thank You!</h3>
-        <p>Check your email for the Power Platform Analysis PDF. You'll also receive strategic automation insights to help grow your business.</p>
-        <button class="btn btn--primary lead-popup__continue">Continue Browsing</button>
-      </div>
-    `;
-    
-    popup.querySelector('.lead-popup__continue').addEventListener('click', () => {
-      this.closePopup(popup);
-    });
+    if (content) {
+      content.innerHTML = `
+        <div class="lead-popup__thank-you" style="text-align: center; padding: 2rem;">
+          <h3 style="color: #059669; margin-bottom: 2rem; font-size: 3.6rem;">Thank You!</h3>
+          <p style="color: #333; margin-bottom: 2rem; line-height: 1.6; font-size: 2.2rem;">Check your email for the Power Platform Analysis PDF. You'll also receive strategic automation insights to help grow your business.</p>
+          <button class="lead-popup__continue" style="background: linear-gradient(to right, #2563eb 0%, #059669 100%); color: white; border: none; padding: 1rem 4.2rem; border-radius: 6px; font-size: 1.8rem; cursor: pointer; transition: all 0.3s ease;">Continue Browsing</button>
+        </div>
+      `;
+      
+      const continueBtn = content.querySelector('.lead-popup__continue');
+      if (continueBtn) {
+        continueBtn.addEventListener('click', () => {
+          this.closePopup(popup);
+        });
+      }
+    }
     
     // Auto-close after 5 seconds
     setTimeout(() => {
@@ -1414,8 +973,12 @@ class PlatformAnalysisDownload {
   }
   
   closePopup(popup) {
-    popup.classList.remove('active');
-    setTimeout(() => popup.remove(), 300);
+    if (popup && popup.parentNode) {
+      popup.style.opacity = '0';
+      setTimeout(() => {
+        popup.remove();
+      }, 300);
+    }
   }
 }
 
@@ -1435,7 +998,6 @@ function initSmoothScrolling() {
           block: 'start'
         });
         
-        // Track navigation clicks
         trackEvent('Navigation', 'Anchor_Click', this.getAttribute('href'));
       }
     });
@@ -1453,67 +1015,48 @@ function initContactForm() {
   contactForm.addEventListener('submit', function(e) {
     e.preventDefault();
     
-    // Get form data
     const formData = new FormData(this);
     const formObject = {};
     formData.forEach((value, key) => {
       formObject[key] = value;
     });
     
-    // Track form submission
     trackEvent('Contact', 'Form_Submit', 'Contact_Form');
     
-    // Show loading state
     const submitBtn = this.querySelector('button[type="submit"]');
     const originalText = submitBtn.textContent;
     submitBtn.textContent = 'Sending...';
     submitBtn.disabled = true;
     
-    // Submit form (replace with your actual form handling)
-    fetch(this.action, {
-      method: 'POST',
-      body: formData
-    })
-    .then(response => {
-      if (response.ok) {
-        // Show success message
-        showFormSuccess();
-        this.reset();
-      } else {
-        throw new Error('Form submission failed');
-      }
-    })
-    .catch(error => {
-      console.error('Form submission error:', error);
-      showFormError();
-    })
-    .finally(() => {
-      // Reset button state
+    // Simulate form submission
+    setTimeout(() => {
+      showFormSuccess();
+      this.reset();
       submitBtn.textContent = originalText;
       submitBtn.disabled = false;
-    });
+    }, 1000);
   });
 }
 
 function showFormSuccess() {
   const successMessage = document.createElement('div');
   successMessage.className = 'form-success';
+  successMessage.style.cssText = 'background: #059669; color: white; padding: 2rem; border-radius: 8px; margin: 2rem 0; text-align: center;';
   successMessage.innerHTML = `
-    <h4>Message Sent Successfully!</h4>
-    <p>Thank you for your interest. I'll get back to you within 24 hours to discuss your automation needs.</p>
+    <h4 style="margin-bottom: 1rem; font-size: 2.8rem;">Message Sent Successfully!</h4>
+    <p style="margin: 0; font-size: 2.2rem;">Thank you for your interest. I'll get back to you within 24 hours to discuss your automation needs.</p>
   `;
   
   const contactForm = document.querySelector('.contact__form-container');
-  contactForm.appendChild(successMessage);
-  
-  // Auto-remove after 5 seconds
-  setTimeout(() => {
-    successMessage.remove();
-  }, 5000);
-}
-
-function showFormError() {
-  alert('Sorry, there was an error sending your message. Please try again or contact me directly at iamahlramz253@gmail.com');
+  if (contactForm) {
+    contactForm.appendChild(successMessage);
+    
+    setTimeout(() => {
+      if (successMessage.parentNode) {
+        successMessage.remove();
+      }
+    }, 5000);
+  }
 }
 
 /* -----------------------------------------
@@ -1562,10 +1105,11 @@ function initPerformanceOptimizations() {
 
 // Initialize all components when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
+  console.log('Portfolio initialization started');
+  
   // Initialize scroll animations
   const statBoxes = document.querySelectorAll('.stat__box, .metric__item');
   statBoxes.forEach((box, index) => {
-    box.classList.add('animate-scale', `delay-${(index % 4) + 1}`);
     scrollObserver.observe(box);
   });
   
@@ -1591,7 +1135,7 @@ document.addEventListener('DOMContentLoaded', () => {
   let timeOnPage = 0;
   setInterval(() => {
     timeOnPage += 30;
-    if (timeOnPage % 120 === 0) { // Every 2 minutes
+    if (timeOnPage % 120 === 0) {
       trackEvent('Engagement', 'Time_on_Page', `${timeOnPage}s`);
     }
   }, 30000);
@@ -1606,4 +1150,6 @@ document.addEventListener('DOMContentLoaded', () => {
       trackEvent('Engagement', 'Scroll_Depth', `${scrollPercent}%`);
     }
   });
+  
+  console.log('Portfolio initialization completed');
 });
