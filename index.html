@@ -32,6 +32,7 @@
         <ul class="nav__items">
           <li class="nav__item"><a href="#work" class="nav__link">Automation Projects</a></li>
           <li class="nav__item"><a href="#results" class="nav__link">Results</a></li>
+          <li class="nav__item"><a href="#platform" class="nav__link">Why Power Platform</a></li>
           <li class="nav__item"><a href="#services" class="nav__link">Services</a></li>
           <li class="nav__item"><a href="#about" class="nav__link">About</a></li>
           <li class="nav__item"><a href="#contact" class="nav__link">Get Started</a></li>
@@ -83,199 +84,144 @@
       </div>
     </section>
 
+    <!-- Power Platform Automation Projects Section -->
     <section class="work" id="work">
       <div class="row">
-        <h2>Power Platform Automation Success Stories</h2>
-        <div class="work__boxes">
+        <h2>Power Platform Automation Projects</h2>
+        <div class="work__intro">
+          <p>
+            Discover how Microsoft Power Platform transforms business operations through intelligent automation. 
+            From simple email processing to complex system integrations, these projects demonstrate real-world 
+            solutions that eliminate manual work and drive measurable ROI.
+          </p>
+          <div class="work__cta">
+            <button class="btn btn--primary automation-gallery-trigger">
+              View Automation Projects
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
 
-          <!-- ServiceTitan to Xero Integration with Case Study -->
-          <div class="work__box">
-            <div class="work__image-container">
-              <img src="./images/automation-servicetitan-xero.jpg" 
-                   class="work__image" 
-                   alt="ServiceTitan to Xero Integration Dashboard" />
-              <div class="work__overlay">
-                <div class="work__overlay-content">
-                  <h3>ServiceTitan to Xero Integration</h3>
-                  <p>Automated invoice reconciliation saving 12+ hours weekly</p>
-                  <div class="work__buttons">
-                    <button class="btn btn--small case-study-trigger" data-case-study="servicetitan-xero">
-                      View Case Study
-                    </button>
-                  </div>
+    <!-- Power BI Analytics Dashboards Section -->
+    <section class="dashboards" id="dashboards">
+      <div class="row">
+        <h2>Power BI Analytics Dashboards</h2>
+        <div class="dashboards__intro">
+          <p>
+            Transform raw data into actionable insights with custom Power BI solutions. These interactive 
+            dashboards showcase advanced analytics capabilities, from sales performance tracking to 
+            operational intelligence across multiple business domains.
+          </p>
+          <div class="dashboards__cta">
+            <button class="btn btn--primary powerbi-gallery-trigger">
+              View Analytics Dashboards
+            </button>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Why Power Platform Section -->
+    <section class="platform-advantages" id="platform">
+      <div class="row">
+        <h2>Why Microsoft Power Platform Outperforms Alternatives</h2>
+        <div class="platform__intro">
+          <p>
+            After analyzing dozens of client implementations, Microsoft Power Platform consistently 
+            delivers superior value compared to alternatives like Zapier, Make.com, and n8n. 
+            Here's why enterprise organizations choose Power Platform for sustainable automation.
+          </p>
+        </div>
+
+        <div class="platform__content">
+          <!-- Key Metrics -->
+          <div class="platform__metrics">
+            <div class="metric__item">
+              <h3>300-400%</h3>
+              <p>ROI within 12 months</p>
+            </div>
+            <div class="metric__item">
+              <h3>$2.1M</h3>
+              <p>Average annual savings vs alternatives</p>
+            </div>
+            <div class="metric__item">
+              <h3>95%</h3>
+              <p>Implementation success rate</p>
+            </div>
+            <div class="metric__item">
+              <h3>Zero</h3>
+              <p>Compliance violations across 50+ clients</p>
+            </div>
+          </div>
+
+          <!-- Comparison Chart -->
+          <div class="platform__comparison">
+            <h3>3-Year Total Cost Comparison</h3>
+            <div class="comparison-chart">
+              <div class="chart__item">
+                <div class="chart__bar chart__bar--power-platform" data-value="$19,800">
+                  <span class="chart__label">Power Platform</span>
+                  <span class="chart__value">$19,800</span>
+                </div>
+              </div>
+              <div class="chart__item">
+                <div class="chart__bar chart__bar--zapier" data-value="$35,244">
+                  <span class="chart__label">Zapier</span>
+                  <span class="chart__value">$35,244</span>
+                </div>
+              </div>
+              <div class="chart__item">
+                <div class="chart__bar chart__bar--n8n" data-value="$63,600">
+                  <span class="chart__label">n8n (Cloud + DevOps)</span>
+                  <span class="chart__value">$63,600</span>
+                </div>
+              </div>
+              <div class="chart__item">
+                <div class="chart__bar chart__bar--make" data-value="$10,404">
+                  <span class="chart__label">Make.com*</span>
+                  <span class="chart__value">$10,404</span>
                 </div>
               </div>
             </div>
-            <div class="work__text">
-              <h3>ServiceTitan to Xero Integration</h3>
-              <p>
-                Eliminated 12+ hours of weekly manual invoice reconciliation for home services company. 
-                Complex bi-directional sync with transaction matching, duplicate detection, and comprehensive error handling.
-              </p>
-              <div class="roi-badge">ROI: 400% in 3 months</div>
-              <ul class="work__list">
-                <li>95% time reduction in invoice processing</li>
-                <li>$15K annual administrative cost savings</li>
-                <li>Zero reconciliation errors</li>
-                <li>400% ROI within 3 months</li>
-              </ul>
-              <div class="work__links">
-                <button class="link__text case-study-trigger" data-case-study="servicetitan-xero">
-                  View Detailed Case Study <span>&rarr;</span>
-                </button>
-              </div>
+            <p class="chart__note">*Make.com requires additional tools for enterprise features</p>
+          </div>
+
+          <!-- Key Advantages -->
+          <div class="platform__advantages-grid">
+            <div class="advantage__item">
+              <div class="advantage__icon">🔒</div>
+              <h4>Enterprise Security</h4>
+              <p>Built-in HIPAA, SOX, GDPR compliance with Azure AD integration and comprehensive audit trails.</p>
+            </div>
+            <div class="advantage__item">
+              <div class="advantage__icon">🤖</div>
+              <h4>AI-Powered Automation</h4>
+              <p>Native AI Builder for document processing, sentiment analysis, and custom model training.</p>
+            </div>
+            <div class="advantage__item">
+              <div class="advantage__icon">📈</div>
+              <h4>Scalable Architecture</h4>
+              <p>Grows from startup to enterprise without migration, with predictable per-user pricing.</p>
+            </div>
+            <div class="advantage__item">
+              <div class="advantage__icon">🔧</div>
+              <h4>Complete Ecosystem</h4>
+              <p>Seamless integration with Microsoft 365, Teams, and Azure services your business already uses.</p>
             </div>
           </div>
 
-          <!-- Work Order Automation with Case Study -->
-          <div class="work__box">
-            <div class="work__image-container">
-              <img src="./images/automation-work-order.jpg" 
-                   class="work__image" 
-                   alt="Work Order Automation Dashboard" />
-              <div class="work__overlay">
-                <div class="work__overlay-content">
-                  <h3>Work Order Automation</h3>
-                  <p>Email-to-job creation with instant notifications</p>
-                  <div class="work__buttons">
-                    <button class="btn btn--small case-study-trigger" data-case-study="work-order-automation">
-                      View Case Study
-                    </button>
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div class="work__text">
-              <h3>Email Work Order Automation</h3>
-              <p>
-                Automated workflow from email work orders directly into job management system, 
-                eliminating delays and improving customer satisfaction.
-              </p>
-              <div class="roi-badge">40% faster response times</div>
-              <ul class="work__list">
-                <li>Instant job creation from emails</li>
-                <li>40% improvement in response times</li>
-                <li>90% reduction in data entry errors</li>
-                <li>8 hours weekly administrative savings</li>
-              </ul>
-              <div class="work__links">
-                <button class="link__text case-study-trigger" data-case-study="work-order-automation">
-                  View Detailed Case Study <span>&rarr;</span>
-                </button>
-              </div>
-            </div>
-          </div>
-
-          <!-- Email Attachment Processing -->
-          <div class="work__box">
-            <div class="work__text">
-              <h3>Email Attachment Processing</h3>
-              <p>
-                Automated email monitoring and attachment extraction for invoice processing. 
-                Power Automate flow reads emails, extracts PDF attachments, and routes them to appropriate approval workflows.
-              </p>
-              <div class="roi-badge">Saved 5 hours/week</div>
-              <ul class="work__list">
-                <li>Power Automate</li>
-                <li>Outlook Integration</li>
-                <li>File Processing</li>
-                <li>SharePoint Storage</li>
-              </ul>
-              <div class="work__links">
-                <a href="#contact" class="link__text">
-                  Automate Your Email Processing <span>&rarr;</span>
-                </a>
-              </div>
-            </div>
-            <div class="work__image-box">
-              <img src="./images/project-2.png" class="work__image" alt="Email Attachment Processing Automation" />
-            </div>
-          </div>
-
-          <!-- API Change Notifications -->
-          <div class="work__box">
-            <div class="work__text">
-              <h3>API Change Notifications</h3>
-              <p>
-                Real-time monitoring system that tracks external API changes and sends instant notifications to stakeholders. 
-                Prevents service disruptions by proactively alerting teams to critical system updates.
-              </p>
-              <div class="roi-badge">99.9% uptime maintained</div>
-              <ul class="work__list">
-                <li>Power Automate</li>
-                <li>HTTP Triggers</li>
-                <li>Teams Notifications</li>
-                <li>Error Monitoring</li>
-              </ul>
-              <div class="work__links">
-                <a href="#contact" class="link__text">
-                  Set Up API Monitoring <span>&rarr;</span>
-                </a>
-              </div>
-            </div>
-            <div class="work__image-box">
-              <img src="./images/project-2.png" class="work__image" alt="API Change Notification System" />
-            </div>
-          </div>
-
-          <!-- AdventureWorks Analytics with Gallery -->
-          <div class="work__box">
-            <div class="work__text">
-              <h3>AdventureWorks Analytics Dashboard</h3>
-              <p>
-                Comprehensive Power BI solution analyzing AdventureWorks sales data with interactive visualizations, 
-                territory performance metrics, and product profitability analysis. Features drill-through capabilities 
-                and dynamic filtering across 4 integrated report pages.
-              </p>
-              <div class="roi-badge">Saved 8 hours/week</div>
-              <ul class="work__list">
-                <li>Power BI Desktop</li>
-                <li>Complex DAX Measures</li>
-                <li>AdventureWorks Dataset</li>
-                <li>Interactive Visualizations</li>
-              </ul>
-              <div class="work__links">
-                <button class="link__text gallery-trigger">
-                  View All 4 Dashboards <span>&rarr;</span>
-                </button>
-              </div>
-            </div>
-            <div class="work__image-box">
-              <img src="./images/automation-servicetitan-xero-integration.jpg" 
-                   class="work__image gallery-trigger" 
-                   alt="AdventureWorks Analytics Dashboard" 
-                   data-gallery="adventureworks" />
-              <div class="gallery-overlay">
-                <div class="gallery-overlay__text">Click to view all 4 dashboards</div>
-                <div class="gallery-overlay__icon">🔍</div>
-              </div>
-            </div>
-          </div>
-
-          <!-- Multi-Step Approval Workflow -->
-          <div class="work__box">
-            <div class="work__text">
-              <h3>Multi-Step Approval Workflow</h3>
-              <p>
-                Automated purchase order approval process with email notifications, escalation rules, 
-                and integration with accounting system.
-              </p>
-              <div class="roi-badge">95% faster approvals</div>
-              <ul class="work__list">
-                <li>Power Apps</li>
-                <li>Power Automate</li>
-                <li>SharePoint</li>
-                <li>Email Integration</li>
-              </ul>
-              <div class="work__links">
-                <a href="#contact" class="link__text">
-                  Automate Your Workflows <span>&rarr;</span>
-                </a>
-              </div>
-            </div>
-            <div class="work__image-box">
-              <img src="./images/project-3.png" class="work__image" alt="Approval Workflow" />
-            </div>
+          <!-- CTAs -->
+          <div class="platform__ctas">
+            <button class="btn btn--primary platform-analysis-trigger">
+              Download Full Analysis
+            </button>
+            <button class="btn btn--secondary roi-calculator-trigger">
+              Calculate Your ROI
+            </button>
+            <a href="#contact" class="btn btn--secondary">
+              Schedule Consultation
+            </a>
           </div>
         </div>
       </div>
@@ -359,7 +305,7 @@
               <li>Automated Dashboard Refresh</li>
             </ul>
             <div class="service__cta">
-              <a href="#contact" class="btn btn--secondary">Get Started</a>
+              <button class="powerbi-gallery-trigger btn btn--secondary">View Dashboards</button>
             </div>
           </div>
           
@@ -562,6 +508,8 @@
           <span>|</span>
           <button class="footer__link roi-calculator-trigger">ROI Calculator</button>
           <span>|</span>
+          <button class="footer__link platform-analysis-trigger">Download Analysis</button>
+          <span>|</span>
           <a href="mailto:iamahlramz253@gmail.com">Contact</a>
         </div>
       </div>
@@ -590,8 +538,238 @@
     <img src="./images/arrow-up.svg" alt="Back to Top" class="back-to-top__image"/>
   </a>
   
-  <!-- Gallery Modal -->
-  <div id="galleryModal" class="gallery-modal">
+  <!-- Automation Projects Gallery Modal -->
+  <div id="automationGallery" class="project-gallery">
+    <div class="modal__overlay"></div>
+    <div class="modal__content">
+      <button class="modal__close">&times;</button>
+      
+      <div class="gallery__slide active" data-project="email-processing">
+        <h3>Email Attachment Processing</h3>
+        <div class="gallery__slide-content">
+          <img src="./images/project-2.png" alt="Email Attachment Processing Automation" class="gallery__image">
+          <div class="gallery__details">
+            <p>Automated email monitoring and attachment extraction for invoice processing. Power Automate flow reads emails, extracts PDF attachments, and routes them to appropriate approval workflows.</p>
+            <div class="roi-badge">Saved 5 hours/week</div>
+            <ul class="tech-stack">
+              <li>Power Automate</li>
+              <li>Outlook Integration</li>
+              <li>File Processing</li>
+              <li>SharePoint Storage</li>
+            </ul>
+            <div class="gallery__actions">
+              <a href="#contact" class="btn btn--primary">Get Similar Solution</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery__slide" data-project="api-monitoring">
+        <h3>API Change Notifications</h3>
+        <div class="gallery__slide-content">
+          <img src="./images/project-2.png" alt="API Change Notification System" class="gallery__image">
+          <div class="gallery__details">
+            <p>Real-time monitoring system that tracks external API changes and sends instant notifications to stakeholders. Prevents service disruptions by proactively alerting teams to critical system updates.</p>
+            <div class="roi-badge">99.9% uptime maintained</div>
+            <ul class="tech-stack">
+              <li>Power Automate</li>
+              <li>HTTP Triggers</li>
+              <li>Teams Notifications</li>
+              <li>Error Monitoring</li>
+            </ul>
+            <div class="gallery__actions">
+              <a href="#contact" class="btn btn--primary">Set Up Monitoring</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery__slide" data-project="work-order">
+        <h3>Email Work Order Automation</h3>
+        <div class="gallery__slide-content">
+          <img src="./images/automation-work-order.jpg" alt="Work Order Automation Dashboard" class="gallery__image">
+          <div class="gallery__details">
+            <p>Automated workflow from email work orders directly into job management system, eliminating delays and improving customer satisfaction.</p>
+            <div class="roi-badge">40% faster response times</div>
+            <ul class="tech-stack">
+              <li>Power Automate</li>
+              <li>Email Processing</li>
+              <li>Job Management Integration</li>
+              <li>Customer Notifications</li>
+            </ul>
+            <div class="gallery__actions">
+              <button class="btn btn--primary case-study-trigger" data-case-study="work-order-automation">
+                View Case Study
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery__slide" data-project="servicetitan-xero">
+        <h3>ServiceTitan to Xero Integration</h3>
+        <div class="gallery__slide-content">
+          <img src="./images/automation-servicetitan-xero.jpg" alt="ServiceTitan to Xero Integration Dashboard" class="gallery__image">
+          <div class="gallery__details">
+            <p>Eliminated 12+ hours of weekly manual invoice reconciliation for home services company. Complex bi-directional sync with transaction matching, duplicate detection, and comprehensive error handling.</p>
+            <div class="roi-badge">ROI: 400% in 3 months</div>
+            <ul class="tech-stack">
+              <li>Power Automate</li>
+              <li>ServiceTitan API</li>
+              <li>Xero Integration</li>
+              <li>Data Transformation</li>
+            </ul>
+            <div class="gallery__actions">
+              <button class="btn btn--primary case-study-trigger" data-case-study="servicetitan-xero">
+                View Case Study
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="gallery__navigation">
+        <button class="gallery__btn gallery__btn--prev">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+        </button>
+        
+        <div class="gallery__indicators">
+          <span class="gallery__counter">1 / 4</span>
+          <div class="gallery__dots">
+            <button class="gallery__dot active" data-slide="0"></button>
+            <button class="gallery__dot" data-slide="1"></button>
+            <button class="gallery__dot" data-slide="2"></button>
+            <button class="gallery__dot" data-slide="3"></button>
+          </div>
+        </div>
+        
+        <button class="gallery__btn gallery__btn--next">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Power BI Dashboards Gallery Modal -->
+  <div id="powerbiGallery" class="project-gallery">
+    <div class="modal__overlay"></div>
+    <div class="modal__content">
+      <button class="modal__close">&times;</button>
+      
+      <div class="gallery__slide active" data-project="adventureworks">
+        <h3>AdventureWorks Analytics Dashboard</h3>
+        <div class="gallery__slide-content">
+          <img src="./images/pbi-adventureworks-1-home.jpg" alt="AdventureWorks Analytics Dashboard" class="gallery__image">
+          <div class="gallery__details">
+            <p>Comprehensive Power BI solution analyzing AdventureWorks sales data with interactive visualizations, territory performance metrics, and product profitability analysis. Features drill-through capabilities and dynamic filtering across 4 integrated report pages.</p>
+            <div class="roi-badge">Saved 8 hours/week</div>
+            <ul class="tech-stack">
+              <li>Power BI Desktop</li>
+              <li>Complex DAX Measures</li>
+              <li>AdventureWorks Dataset</li>
+              <li>Interactive Visualizations</li>
+            </ul>
+            <div class="gallery__actions">
+              <button class="btn btn--primary adventureworks-gallery-trigger">
+                View All 4 Dashboards
+              </button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery__slide" data-project="superstore">
+        <h3>Superstore Performance Dashboard</h3>
+        <div class="gallery__slide-content">
+          <img src="./images/project-2.png" alt="Superstore Performance Dashboard" class="gallery__image">
+          <div class="gallery__details">
+            <p>Executive-level dashboard tracking sales performance, profitability trends, and customer segmentation across multiple product categories. Features predictive analytics and automated anomaly detection.</p>
+            <div class="roi-badge">15% profit increase</div>
+            <ul class="tech-stack">
+              <li>Power BI Service</li>
+              <li>Predictive Analytics</li>
+              <li>Customer Segmentation</li>
+              <li>Automated Alerts</li>
+            </ul>
+            <div class="gallery__actions">
+              <a href="#contact" class="btn btn--primary">Build Similar Dashboard</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery__slide" data-project="pizza-sales">
+        <h3>Pizza Sales Analytics Dashboard</h3>
+        <div class="gallery__slide-content">
+          <img src="./images/project-2.png" alt="Pizza Sales Analytics Dashboard" class="gallery__image">
+          <div class="gallery__details">
+            <p>Restaurant performance tracking dashboard analyzing sales patterns, peak hours, popular items, and revenue optimization opportunities. Includes real-time order monitoring and inventory insights.</p>
+            <div class="roi-badge">20% revenue optimization</div>
+            <ul class="tech-stack">
+              <li>Power BI Embedded</li>
+              <li>Real-time Data Streaming</li>
+              <li>Sales Forecasting</li>
+              <li>Inventory Integration</li>
+            </ul>
+            <div class="gallery__actions">
+              <a href="#contact" class="btn btn--primary">Create Restaurant Dashboard</a>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class="gallery__slide" data-project="northwind">
+        <h3>Northwind Traders Executive Dashboard</h3>
+        <div class="gallery__slide-content">
+          <img src="./images/project-2.png" alt="Northwind Traders Executive Dashboard" class="gallery__image">
+          <div class="gallery__details">
+            <p>Comprehensive executive dashboard providing strategic insights into trading operations, supplier performance, customer analytics, and financial KPIs. Features advanced drill-through capabilities and mobile optimization.</p>
+            <div class="roi-badge">30% decision speed increase</div>
+            <ul class="tech-stack">
+              <li>Power BI Premium</li>
+              <li>Advanced DAX</li>
+              <li>Mobile Optimization</li>
+              <li>Executive Reporting</li>
+            </ul>
+            <div class="gallery__actions">
+              <a href="#contact" class="btn btn--primary">Design Executive Dashboard</a>
+            </div>
+          </div>
+        </div>
+      </div>
+      
+      <div class="gallery__navigation">
+        <button class="gallery__btn gallery__btn--prev">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="15,18 9,12 15,6"></polyline>
+          </svg>
+        </button>
+        
+        <div class="gallery__indicators">
+          <span class="gallery__counter">1 / 4</span>
+          <div class="gallery__dots">
+            <button class="gallery__dot active" data-slide="0"></button>
+            <button class="gallery__dot" data-slide="1"></button>
+            <button class="gallery__dot" data-slide="2"></button>
+            <button class="gallery__dot" data-slide="3"></button>
+          </div>
+        </div>
+        
+        <button class="gallery__btn gallery__btn--next">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="9,18 15,12 9,6"></polyline>
+          </svg>
+        </button>
+      </div>
+    </div>
+  </div>
+
+  <!-- AdventureWorks Detailed Gallery Modal (original 4-image gallery) -->
+  <div id="adventureworksGallery" class="gallery-modal">
     <div class="modal__overlay"></div>
     <div class="modal__content">
       <button class="modal__close">&times;</button>
