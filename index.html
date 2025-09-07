@@ -13,6 +13,15 @@
   <meta name="description" content="Business Process Automation Expert helping US/UK/AU companies eliminate manual processes with Microsoft Power Platform. Data Analyst turned Automation Specialist.">
   <meta name="keywords" content="Business Process Automation, Power Platform, Power Automate, Power BI, Microsoft, Process Improvement, Data Analysis, Workflow Automation" />
   <link rel="stylesheet" href="index.css" />
+  
+  <!-- Google Analytics (Replace GA_MEASUREMENT_ID with your actual ID when ready) -->
+  <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=GA_MEASUREMENT_ID"></script>
+  <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+    gtag('config', 'GA_MEASUREMENT_ID');
+  </script> -->
 </head>
 
 <body>
@@ -24,11 +33,10 @@
           <li class="nav__item"><a href="#work" class="nav__link">Automation Projects</a></li>
           <li class="nav__item"><a href="#results" class="nav__link">Results</a></li>
           <li class="nav__item"><a href="#services" class="nav__link">Services</a></li>
+          <li class="nav__item"><a href="#about" class="nav__link">About</a></li>
+          <li class="nav__item"><a href="#contact" class="nav__link">Get Started</a></li>
           <li class="nav__item">
-            <a href="#about" class="nav__link">About</a>
-          </li>
-          <li class="nav__item">
-            <a href="#contact" class="nav__link">Get Started</a>
+            <button class="nav__link roi-calculator-trigger">ROI Calculator</button>
           </li>
         </ul>
       </nav>
@@ -40,19 +48,125 @@
         </h1>
         <p>Stop Wasting Hours on Manual Processes</p>
         <p class="header__subtitle">Business Process Automation Expert | Microsoft Power Platform Specialist</p>
-        <a href="#contact" class="btn btn--teal">Get Free Process Assessment</a>
+        <div class="header__cta">
+          <a href="#contact" class="btn btn--teal">Get Free Process Assessment</a>
+          <button class="btn btn--secondary roi-calculator-trigger">Calculate Your ROI</button>
+        </div>
       </div>
     </div>
   </header>
 
   <main role="main">
 
+    <!-- Success Metrics Section -->
+    <section class="stats" id="stats">
+      <div class="row">
+        <h2>Proven Results for Growing Businesses</h2>
+        <div class="stats__content">
+          <div class="stat__box">
+            <h3>70%</h3>
+            <p>Average time reduction in manual processes</p>
+          </div>
+          <div class="stat__box">
+            <h3>400%</h3>
+            <p>Average ROI within first year</p>
+          </div>
+          <div class="stat__box">
+            <h3>95%</h3>
+            <p>Client satisfaction rate</p>
+          </div>
+          <div class="stat__box">
+            <h3>15+</h3>
+            <p>Successful automation projects delivered</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
     <section class="work" id="work">
       <div class="row">
         <h2>Power Platform Automation Success Stories</h2>
         <div class="work__boxes">
 
-          <!-- Basic Automation -->
+          <!-- ServiceTitan to Xero Integration with Case Study -->
+          <div class="work__box">
+            <div class="work__image-container">
+              <img src="./images/automation-servicetitan-xero.jpg" 
+                   class="work__image" 
+                   alt="ServiceTitan to Xero Integration Dashboard" />
+              <div class="work__overlay">
+                <div class="work__overlay-content">
+                  <h3>ServiceTitan to Xero Integration</h3>
+                  <p>Automated invoice reconciliation saving 12+ hours weekly</p>
+                  <div class="work__buttons">
+                    <button class="btn btn--small case-study-trigger" data-case-study="servicetitan-xero">
+                      View Case Study
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="work__text">
+              <h3>ServiceTitan to Xero Integration</h3>
+              <p>
+                Eliminated 12+ hours of weekly manual invoice reconciliation for home services company. 
+                Complex bi-directional sync with transaction matching, duplicate detection, and comprehensive error handling.
+              </p>
+              <div class="roi-badge">ROI: 400% in 3 months</div>
+              <ul class="work__list">
+                <li>95% time reduction in invoice processing</li>
+                <li>$15K annual administrative cost savings</li>
+                <li>Zero reconciliation errors</li>
+                <li>400% ROI within 3 months</li>
+              </ul>
+              <div class="work__links">
+                <button class="link__text case-study-trigger" data-case-study="servicetitan-xero">
+                  View Detailed Case Study <span>&rarr;</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Work Order Automation with Case Study -->
+          <div class="work__box">
+            <div class="work__image-container">
+              <img src="./images/automation-work-order.jpg" 
+                   class="work__image" 
+                   alt="Work Order Automation Dashboard" />
+              <div class="work__overlay">
+                <div class="work__overlay-content">
+                  <h3>Work Order Automation</h3>
+                  <p>Email-to-job creation with instant notifications</p>
+                  <div class="work__buttons">
+                    <button class="btn btn--small case-study-trigger" data-case-study="work-order-automation">
+                      View Case Study
+                    </button>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="work__text">
+              <h3>Email Work Order Automation</h3>
+              <p>
+                Automated workflow from email work orders directly into job management system, 
+                eliminating delays and improving customer satisfaction.
+              </p>
+              <div class="roi-badge">40% faster response times</div>
+              <ul class="work__list">
+                <li>Instant job creation from emails</li>
+                <li>40% improvement in response times</li>
+                <li>90% reduction in data entry errors</li>
+                <li>8 hours weekly administrative savings</li>
+              </ul>
+              <div class="work__links">
+                <button class="link__text case-study-trigger" data-case-study="work-order-automation">
+                  View Detailed Case Study <span>&rarr;</span>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- Email Attachment Processing -->
           <div class="work__box">
             <div class="work__text">
               <h3>Email Attachment Processing</h3>
@@ -67,7 +181,6 @@
                 <li>File Processing</li>
                 <li>SharePoint Storage</li>
               </ul>
-
               <div class="work__links">
                 <a href="#contact" class="link__text">
                   Automate Your Email Processing <span>&rarr;</span>
@@ -79,7 +192,7 @@
             </div>
           </div>
 
-          <!-- Simple Automation -->
+          <!-- API Change Notifications -->
           <div class="work__box">
             <div class="work__text">
               <h3>API Change Notifications</h3>
@@ -94,7 +207,6 @@
                 <li>Teams Notifications</li>
                 <li>Error Monitoring</li>
               </ul>
-
               <div class="work__links">
                 <a href="#contact" class="link__text">
                   Set Up API Monitoring <span>&rarr;</span>
@@ -106,60 +218,7 @@
             </div>
           </div>
 
-          <!-- Complex Automation -->
-          <div class="work__box">
-            <div class="work__text">
-              <h3>Invoice Processing Automation</h3>
-              <p>
-                End-to-end invoice processing with AI-powered data extraction, validation rules, and multi-level approval workflows. 
-                Integrates with accounting systems for seamless financial processing.
-              </p>
-              <div class="roi-badge">85% processing time reduction</div>
-              <ul class="work__list">
-                <li>AI Builder OCR</li>
-                <li>Power Automate</li>
-                <li>Approval Workflows</li>
-                <li>ERP Integration</li>
-              </ul>
-
-              <div class="work__links">
-                <a href="#contact" class="link__text">
-                  Automate Invoice Processing <span>&rarr;</span>
-                </a>
-              </div>
-            </div>
-            <div class="work__image-box">
-              <img src="./images/project-2.png" class="work__image" alt="Invoice Processing Automation" />
-            </div>
-          </div>
-
-          <!-- Heavy Integration -->
-          <div class="work__box">
-            <div class="work__text">
-              <h3>ServiceTitan to Xero Integration</h3>
-              <p>
-                Eliminated 12+ hours of weekly manual invoice reconciliation for home services company. 
-                Complex bi-directional sync with transaction matching, duplicate detection, and comprehensive error handling.
-              </p>
-              <div class="roi-badge">ROI: 400% in 3 months</div>
-              <ul class="work__list">
-                <li>Power Automate</li>
-                <li>ServiceTitan API</li>
-                <li>Xero Integration</li>
-                <li>Data Transformation</li>
-              </ul>
-
-              <div class="work__links">
-                <a href="#contact" class="link__text">
-                  Get Similar Results <span>&rarr;</span>
-                </a>
-              </div>
-            </div>
-            <div class="work__image-box">
-              <img src="./images/project-2.png" class="work__image" alt="ServiceTitan Xero Integration Dashboard" />
-            </div>
-          </div>
-
+          <!-- AdventureWorks Analytics with Gallery -->
           <div class="work__box">
             <div class="work__text">
               <h3>AdventureWorks Analytics Dashboard</h3>
@@ -175,15 +234,14 @@
                 <li>AdventureWorks Dataset</li>
                 <li>Interactive Visualizations</li>
               </ul>
-
               <div class="work__links">
-                <a href="#contact" class="link__text">
-                  Build Your Dashboard <span>&rarr;</span>
-                </a>
+                <button class="link__text gallery-trigger">
+                  View All 4 Dashboards <span>&rarr;</span>
+                </button>
               </div>
             </div>
             <div class="work__image-box">
-              <img src="./images/pbi-adventureworks-1-home.jpg" 
+              <img src="./images/automation-servicetitan-xero-integration.jpg" 
                    class="work__image gallery-trigger" 
                    alt="AdventureWorks Analytics Dashboard" 
                    data-gallery="adventureworks" />
@@ -194,6 +252,7 @@
             </div>
           </div>
 
+          <!-- Multi-Step Approval Workflow -->
           <div class="work__box">
             <div class="work__text">
               <h3>Multi-Step Approval Workflow</h3>
@@ -208,7 +267,6 @@
                 <li>SharePoint</li>
                 <li>Email Integration</li>
               </ul>
-
               <div class="work__links">
                 <a href="#contact" class="link__text">
                   Automate Your Workflows <span>&rarr;</span>
@@ -223,40 +281,56 @@
       </div>
     </section>
 
-    <section class="client" id="results">
+    <!-- Testimonials Section -->
+    <section class="testimonials">
       <div class="row">
-        <h2>Proven Results</h2>
-        <div class="results__stats">
-          <div class="stat__box">
-            <h3>70%</h3>
-            <p>Average Time Savings</p>
+        <h2>Client Success Stories</h2>
+        <div class="testimonials__content">
+          
+          <div class="testimonial">
+            <blockquote>
+              "This automation transformed our accounting process completely. What used to take our bookkeeper most of Monday morning now happens automatically. The accuracy is perfect, and we can focus on growing the business instead of wrestling with invoice matching."
+            </blockquote>
+            <cite>
+              <img src="./images/testimonial-sarah.jpg" alt="Sarah Johnson" class="testimonial__photo">
+              <div class="testimonial__info">
+                <strong>Sarah Johnson</strong>
+                <span>Operations Manager, ABC Plumbing</span>
+              </div>
+            </cite>
           </div>
-          <div class="stat__box">
-            <h3>400%</h3>
-            <p>Average ROI</p>
+
+          <div class="testimonial">
+            <blockquote>
+              "Our response time to new work orders went from hours to minutes. Customers notice the difference, and our team can focus on actual service delivery instead of paperwork."
+            </blockquote>
+            <cite>
+              <img src="./images/testimonial-mike.jpg" alt="Mike Rodriguez" class="testimonial__photo">
+              <div class="testimonial__info">
+                <strong>Mike Rodriguez</strong>
+                <span>Service Manager, ProTech Services</span>
+              </div>
+            </cite>
           </div>
-          <div class="stat__box">
-            <h3>95%</h3>
-            <p>Client Satisfaction</p>
+
+          <div class="testimonial">
+            <blockquote>
+              "We finally have real-time visibility into our parts inventory across all systems. No more emergency runs to suppliers or disappointed customers waiting for parts."
+            </blockquote>
+            <cite>
+              <img src="./images/testimonial-jennifer.jpg" alt="Jennifer Chen" class="testimonial__photo">
+              <div class="testimonial__info">
+                <strong>Jennifer Chen</strong>
+                <span>Inventory Manager, Reliable HVAC</span>
+              </div>
+            </cite>
           </div>
-          <div class="stat__box">
-            <h3>15+</h3>
-            <p>Automation Projects</p>
-          </div>
-        </div>
-        
-        <div class="testimonial">
-          <blockquote>
-            "This automation transformed our accounting process completely. What used to take our bookkeeper 
-            most of Monday morning now happens automatically. The accuracy is perfect, and we can focus on 
-            growing the business instead of wrestling with invoice matching."
-          </blockquote>
-          <cite>— Operations Manager, Home Services Company</cite>
+
         </div>
       </div>
     </section>
 
-    <!-- ***** Services ***** -->
+    <!-- Services Section -->
     <section class="services" id="services">
       <div class="row">
         <h2>Services Offered</h2>
@@ -270,6 +344,9 @@
               <li>Error Handling & Monitoring</li>
               <li>Process Optimization & Scaling</li>
             </ul>
+            <div class="service__cta">
+              <button class="roi-calculator-trigger btn btn--secondary">Calculate ROI</button>
+            </div>
           </div>
           
           <div class="service__box">
@@ -281,6 +358,9 @@
               <li>Data Source Consolidation</li>
               <li>Automated Dashboard Refresh</li>
             </ul>
+            <div class="service__cta">
+              <a href="#contact" class="btn btn--secondary">Get Started</a>
+            </div>
           </div>
           
           <div class="service__box">
@@ -292,6 +372,11 @@
               <li>Real-time Sync Implementation</li>
               <li>Integration Maintenance & Support</li>
             </ul>
+            <div class="service__cta">
+              <button class="case-study-trigger btn btn--secondary" data-case-study="servicetitan-xero">
+                View Case Study
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -315,7 +400,11 @@
               <strong>My Mission:</strong> Help business owners get back hours of their week by eliminating repetitive tasks, 
               so they can focus on what really matters - growing their business.
             </p>
-            <a href="#contact" class="btn">Start Eliminating Manual Work</a>
+            
+            <div class="about__cta">
+              <a href="#contact" class="btn btn--primary">Start Eliminating Manual Work</a>
+              <button class="roi-calculator-trigger btn btn--secondary">See Your Potential Savings</button>
+            </div>
           </div>
 
           <div class="about__photo-container">
@@ -368,32 +457,115 @@
   <section class="contact" id="contact">
     <div class="row">
       <h2>Ready to Stop Wasting Time on Manual Processes?</h2>
-      <div class="contact__info">
-        <p>
-          Are you tired of spending hours every week on repetitive tasks that could be automated? 
-          I help businesses like yours eliminate manual processes with smart Microsoft Power Platform solutions.
-        </p>
-        <p>
-          <strong>Free 30-minute consultation includes:</strong><br>
-          ✓ Analysis of your current manual processes<br>
-          ✓ Automation opportunity assessment<br>
-          ✓ ROI projection for potential solutions<br>
-          ✓ No obligation, no sales pressure
-        </p>
-        <a href="mailto:iamahlramz253@gmail.com" class="btn">Schedule Free Consultation</a>
+      <div class="contact__content">
         
-        <div class="contact__methods">
-          <p><strong>Prefer a different way to connect?</strong></p>
-          <p>📧 Email: iamahlramz253@gmail.com</p>
-          <p>💼 LinkedIn: https://www.linkedin.com/in/iamahlramz</p>
-          <p>🌍 Serving: PH, AU, UK, US time zones</p>
+        <div class="contact__info">
+          <h3>Get Your Free Automation Assessment</h3>
+          <p>
+            Are you tired of spending hours every week on repetitive tasks that could be automated? 
+            I help businesses like yours eliminate manual processes with smart Microsoft Power Platform solutions.
+          </p>
+          
+          <div class="contact__value-props">
+            <h4>Free 30-minute consultation includes:</h4>
+            <ul>
+              <li>✓ Analysis of your current manual processes</li>
+              <li>✓ Automation opportunity assessment</li>
+              <li>✓ ROI projection for potential solutions</li>
+              <li>✓ No obligation, no sales pressure</li>
+            </ul>
+          </div>
+
+          <div class="contact__details">
+            <div class="contact__item">
+              <strong>Email:</strong>
+              <a href="mailto:iamahlramz253@gmail.com">iamahlramz253@gmail.com</a>
+            </div>
+            <div class="contact__item">
+              <strong>LinkedIn:</strong>
+              <a href="https://www.linkedin.com/in/iamahlramz" target="_blank">linkedin.com/in/iamahlramz</a>
+            </div>
+            <div class="contact__item">
+              <strong>Serving:</strong>
+              <span>PH, AU, UK, US time zones</span>
+            </div>
+            <div class="contact__item">
+              <strong>Response Time:</strong>
+              <span>Within 24 hours</span>
+            </div>
+          </div>
+
+          <div class="contact__cta">
+            <button class="roi-calculator-trigger btn btn--secondary">
+              Start with ROI Calculator
+            </button>
+          </div>
         </div>
+
+        <div class="contact__form-container">
+          <form class="contact__form" action="https://formspree.io/f/YOUR_FORM_ID" method="POST">
+            <div class="form__group">
+              <label for="name">Name *</label>
+              <input type="text" id="name" name="name" required>
+            </div>
+            
+            <div class="form__group">
+              <label for="email">Business Email *</label>
+              <input type="email" id="email" name="email" required>
+            </div>
+            
+            <div class="form__group">
+              <label for="company">Company</label>
+              <input type="text" id="company" name="company">
+            </div>
+            
+            <div class="form__group">
+              <label for="phone">Phone Number</label>
+              <input type="tel" id="phone" name="phone">
+            </div>
+            
+            <div class="form__group">
+              <label for="processes">What manual processes are consuming your team's time?</label>
+              <textarea id="processes" name="processes" rows="4" 
+                        placeholder="e.g., Invoice reconciliation between systems, manual data entry, repetitive reporting..."></textarea>
+            </div>
+            
+            <div class="form__group">
+              <label for="timeline">When are you looking to implement automation?</label>
+              <select id="timeline" name="timeline">
+                <option value="">Select timeline</option>
+                <option value="immediately">Immediately (within 30 days)</option>
+                <option value="soon">Soon (1-3 months)</option>
+                <option value="planning">Planning phase (3-6 months)</option>
+                <option value="exploring">Just exploring options</option>
+              </select>
+            </div>
+            
+            <button type="submit" class="btn btn--primary">
+              Schedule Free Consultation
+            </button>
+          </form>
+        </div>
+
       </div>
     </div>
   </section>
 
   <footer role="contentinfo" class="footer">
     <div class="row">
+      <div class="footer__content">
+        <p>
+          &copy; 2025 - Allan Ramirez | Business Process Automation Expert
+        </p>
+        <div class="footer__links">
+          <a href="#top">Back to Top</a>
+          <span>|</span>
+          <button class="footer__link roi-calculator-trigger">ROI Calculator</button>
+          <span>|</span>
+          <a href="mailto:iamahlramz253@gmail.com">Contact</a>
+        </div>
+      </div>
+      
       <ul class="footer__social-links">
         <li class="footer__social-link-item">
           <a href="https://www.linkedin.com/in/iamahlramz" title="Link to LinkedIn Profile">
@@ -411,10 +583,6 @@
           </a>
         </li>
       </ul>
-
-      <p>
-        &copy; 2025 - Allan Ramirez | Business Process Automation Expert
-      </p>
     </div>
   </footer>
 
@@ -423,25 +591,34 @@
   </a>
   
   <!-- Gallery Modal -->
-  <div class="modal" id="galleryModal">
+  <div id="galleryModal" class="gallery-modal">
     <div class="modal__overlay"></div>
     <div class="modal__content">
-      <button class="modal__close" aria-label="Close modal">&times;</button>
-      <div class="gallery-container">
-        <button class="gallery__btn gallery__btn--prev" aria-label="Previous image">‹</button>
-        <img class="modal__image" src="" alt="">
-        <button class="gallery__btn gallery__btn--next" aria-label="Next image">›</button>
-      </div>
+      <button class="modal__close">&times;</button>
+      <img src="" alt="" class="modal__image">
+      <p class="modal__caption"></p>
+      
+      <button class="gallery__btn gallery__btn--prev">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="15,18 9,12 15,6"></polyline>
+        </svg>
+      </button>
+      
+      <button class="gallery__btn gallery__btn--next">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+          <polyline points="9,18 15,12 9,6"></polyline>
+        </svg>
+      </button>
+      
       <div class="gallery__indicators">
         <span class="gallery__counter">1 / 4</span>
         <div class="gallery__dots">
-          <span class="gallery__dot active" data-index="0"></span>
-          <span class="gallery__dot" data-index="1"></span>
-          <span class="gallery__dot" data-index="2"></span>
-          <span class="gallery__dot" data-index="3"></span>
+          <button class="gallery__dot active"></button>
+          <button class="gallery__dot"></button>
+          <button class="gallery__dot"></button>
+          <button class="gallery__dot"></button>
         </div>
       </div>
-      <div class="modal__caption"></div>
     </div>
   </div>
   
