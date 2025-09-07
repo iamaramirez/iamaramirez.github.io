@@ -1,0 +1,770 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Email Processing Automation Case Study | Allan Ramirez</title>
+    <meta name="description" content="How we reduced daily email processing from 15 minutes to 30 seconds with Power Automate, SharePoint, and Power BI integration">
+    <link rel="stylesheet" href="index.css">
+    <style>
+        .case-study-header {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            padding: 2rem 0;
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.3);
+        }
+        
+        .case-study-nav {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .back-link {
+            color: #0078d4;
+            text-decoration: none;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .back-link:hover {
+            transform: translateX(-5px);
+        }
+        
+        .case-study-hero {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            padding: 6rem 2rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .hero-badge {
+            display: inline-block;
+            background: #0078d4;
+            color: white;
+            padding: 0.5rem 1.5rem;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+        
+        .case-study-title {
+            font-size: 3rem;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fff 0%, #0078d4 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .case-study-subtitle {
+            font-size: 1.3rem;
+            color: rgba(255,255,255,0.8);
+            max-width: 800px;
+            margin: 0 auto 3rem;
+            line-height: 1.6;
+        }
+        
+        .key-metrics {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .metric-card {
+            background: rgba(255,255,255,0.05);
+            border: 1px solid rgba(255,255,255,0.1);
+            border-radius: 12px;
+            padding: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .metric-card:hover {
+            background: rgba(255,255,255,0.08);
+            transform: translateY(-5px);
+        }
+        
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: bold;
+            color: #4ade80;
+            margin-bottom: 0.5rem;
+        }
+        
+        .metric-label {
+            font-size: 0.9rem;
+            color: rgba(255,255,255,0.7);
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .mockup-section {
+            padding: 4rem 2rem;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .mockup-section:nth-child(even) {
+            background: #f8f9fa;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            margin-bottom: 1rem;
+            color: #1a1a2e;
+        }
+        
+        .section-description {
+            color: #666;
+            margin-bottom: 3rem;
+            line-height: 1.6;
+        }
+        
+        .workflow-diagram {
+            background: white;
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+        }
+        
+        .workflow-steps {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 2rem;
+        }
+        
+        .workflow-step {
+            flex: 1;
+            min-width: 150px;
+            text-align: center;
+        }
+        
+        .step-icon {
+            width: 80px;
+            height: 80px;
+            background: linear-gradient(135deg, #0078d4 0%, #40e0d0 100%);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 1rem;
+            font-size: 2rem;
+            color: white;
+        }
+        
+        .step-arrow {
+            font-size: 2rem;
+            color: #0078d4;
+        }
+        
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            margin-top: 2rem;
+        }
+        
+        .comparison-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+        }
+        
+        .comparison-card.before {
+            border-left: 4px solid #ef4444;
+        }
+        
+        .comparison-card.after {
+            border-left: 4px solid #4ade80;
+        }
+        
+        .comparison-title {
+            font-size: 1.5rem;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .pain-point {
+            display: flex;
+            align-items: start;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .pain-icon {
+            color: #ef4444;
+            font-size: 1.5rem;
+        }
+        
+        .benefit-icon {
+            color: #4ade80;
+            font-size: 1.5rem;
+        }
+        
+        .architecture-diagram {
+            background: white;
+            border-radius: 12px;
+            padding: 3rem;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+            text-align: center;
+        }
+        
+        .tech-stack-visual {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .tech-item {
+            background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+            border-radius: 12px;
+            padding: 1.5rem;
+            text-align: center;
+            transition: all 0.3s ease;
+        }
+        
+        .tech-item:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        
+        .tech-logo {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+        
+        .roi-calculator-visual {
+            background: linear-gradient(135deg, #0078d4 0%, #40e0d0 100%);
+            border-radius: 12px;
+            padding: 3rem;
+            color: white;
+            text-align: center;
+        }
+        
+        .roi-number {
+            font-size: 4rem;
+            font-weight: bold;
+            margin: 2rem 0;
+        }
+        
+        .roi-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .roi-item {
+            background: rgba(255,255,255,0.1);
+            border-radius: 8px;
+            padding: 1.5rem;
+        }
+        
+        .time-comparison {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 3rem;
+            margin: 3rem 0;
+        }
+        
+        .time-block {
+            text-align: center;
+        }
+        
+        .time-value {
+            font-size: 3rem;
+            font-weight: bold;
+            margin-bottom: 0.5rem;
+        }
+        
+        .time-block.before .time-value {
+            color: #ef4444;
+        }
+        
+        .time-block.after .time-value {
+            color: #4ade80;
+        }
+        
+        .time-label {
+            color: #666;
+            text-transform: uppercase;
+            font-size: 0.9rem;
+            letter-spacing: 0.05em;
+        }
+        
+        .arrow-transform {
+            font-size: 3rem;
+            color: #0078d4;
+        }
+        
+        .industry-applications {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+        
+        .industry-card {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 5px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        
+        .industry-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 30px rgba(0,0,0,0.15);
+        }
+        
+        .industry-icon {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .industry-name {
+            font-size: 1.3rem;
+            font-weight: bold;
+            margin-bottom: 1rem;
+            color: #1a1a2e;
+        }
+        
+        .use-case-list {
+            list-style: none;
+            padding: 0;
+        }
+        
+        .use-case-list li {
+            padding: 0.5rem 0;
+            color: #666;
+            display: flex;
+            align-items: start;
+            gap: 0.5rem;
+        }
+        
+        .use-case-list li:before {
+            content: "✓";
+            color: #4ade80;
+            font-weight: bold;
+        }
+        
+        .cta-section {
+            background: linear-gradient(135deg, #1a1a2e 0%, #0f0f1e 100%);
+            padding: 4rem 2rem;
+            text-align: center;
+            color: white;
+        }
+        
+        .cta-title {
+            font-size: 2.5rem;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-description {
+            font-size: 1.2rem;
+            color: rgba(255,255,255,0.8);
+            margin-bottom: 2rem;
+            max-width: 600px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .cta-btn {
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            text-decoration: none;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .cta-btn.primary {
+            background: #0078d4;
+            color: white;
+        }
+        
+        .cta-btn.primary:hover {
+            background: #106ebe;
+            transform: translateY(-2px);
+        }
+        
+        .cta-btn.secondary {
+            background: transparent;
+            color: white;
+            border: 2px solid rgba(255,255,255,0.3);
+        }
+        
+        .cta-btn.secondary:hover {
+            background: rgba(255,255,255,0.1);
+            border-color: rgba(255,255,255,0.5);
+        }
+        
+        @media (max-width: 768px) {
+            .case-study-title {
+                font-size: 2rem;
+            }
+            
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .workflow-steps {
+                flex-direction: column;
+            }
+            
+            .step-arrow {
+                transform: rotate(90deg);
+            }
+            
+            .time-comparison {
+                flex-direction: column;
+                gap: 1rem;
+            }
+            
+            .arrow-transform {
+                transform: rotate(90deg);
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Header with Navigation -->
+    <header class="case-study-header">
+        <nav class="case-study-nav">
+            <a href="./index.html" class="back-link">
+                ← Back to Portfolio
+            </a>
+            <span style="color: white; font-weight: 600;">Email Processing Automation</span>
+        </nav>
+    </header>
+
+    <!-- Hero Section -->
+    <section class="case-study-hero">
+        <div class="hero-badge">CASE STUDY</div>
+        <h1 class="case-study-title">Email Processing Automation</h1>
+        <p class="case-study-subtitle">
+            How we transformed a tedious 15-minute daily task into a 30-second automated workflow, 
+            saving 650+ hours annually for a multi-store retail operation
+        </p>
+        
+        <div class="key-metrics">
+            <div class="metric-card">
+                <div class="metric-value">97%</div>
+                <div class="metric-label">Time Reduction</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">650hrs</div>
+                <div class="metric-label">Saved Annually</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value">2-3wks</div>
+                <div class="metric-label">Implementation</div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Workflow Visualization -->
+    <section class="mockup-section">
+        <h2 class="section-title">Automated Workflow Process</h2>
+        <p class="section-description">
+            Our intelligent automation monitors incoming emails, extracts attachments, organizes files by store location and date, 
+            and automatically updates Power BI dashboards - all without human intervention.
+        </p>
+        
+        <div class="workflow-diagram">
+            <div class="workflow-steps">
+                <div class="workflow-step">
+                    <div class="step-icon">📧</div>
+                    <h3>Email Arrives</h3>
+                    <p>Daily sales reports from multiple stores</p>
+                </div>
+                <span class="step-arrow">→</span>
+                <div class="workflow-step">
+                    <div class="step-icon">🤖</div>
+                    <h3>Power Automate</h3>
+                    <p>Triggers instantly on new emails</p>
+                </div>
+                <span class="step-arrow">→</span>
+                <div class="workflow-step">
+                    <div class="step-icon">📁</div>
+                    <h3>SharePoint</h3>
+                    <p>Organized by store & date</p>
+                </div>
+                <span class="step-arrow">→</span>
+                <div class="workflow-step">
+                    <div class="step-icon">📊</div>
+                    <h3>Power BI</h3>
+                    <p>Real-time dashboard updates</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Before vs After Comparison -->
+    <section class="mockup-section">
+        <h2 class="section-title">The Transformation</h2>
+        <p class="section-description">
+            See how we eliminated manual processing bottlenecks and created a seamless, error-free workflow.
+        </p>
+        
+        <div class="comparison-grid">
+            <div class="comparison-card before">
+                <h3 class="comparison-title">
+                    <span style="color: #ef4444;">✗</span> Before Automation
+                </h3>
+                <div class="pain-point">
+                    <span class="pain-icon">⏰</span>
+                    <div>
+                        <strong>15 minutes daily</strong>
+                        <p>Manual email checking and attachment downloading</p>
+                    </div>
+                </div>
+                <div class="pain-point">
+                    <span class="pain-icon">😤</span>
+                    <div>
+                        <strong>Error-prone process</strong>
+                        <p>Files saved to wrong folders, naming inconsistencies</p>
+                    </div>
+                </div>
+                <div class="pain-point">
+                    <span class="pain-icon">📈</span>
+                    <div>
+                        <strong>Delayed reporting</strong>
+                        <p>Dashboard updates only after manual processing</p>
+                    </div>
+                </div>
+                <div class="pain-point">
+                    <span class="pain-icon">🔄</span>
+                    <div>
+                        <strong>Repetitive work</strong>
+                        <p>Same tedious process every single day</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="comparison-card after">
+                <h3 class="comparison-title">
+                    <span style="color: #4ade80;">✓</span> After Automation
+                </h3>
+                <div class="pain-point">
+                    <span class="benefit-icon">⚡</span>
+                    <div>
+                        <strong>30 seconds total</strong>
+                        <p>Fully automated processing within seconds of email arrival</p>
+                    </div>
+                </div>
+                <div class="pain-point">
+                    <span class="benefit-icon">✅</span>
+                    <div>
+                        <strong>100% accuracy</strong>
+                        <p>Consistent file organization and naming conventions</p>
+                    </div>
+                </div>
+                <div class="pain-point">
+                    <span class="benefit-icon">📊</span>
+                    <div>
+                        <strong>Real-time updates</strong>
+                        <p>Dashboards refresh automatically with new data</p>
+                    </div>
+                </div>
+                <div class="pain-point">
+                    <span class="benefit-icon">🎯</span>
+                    <div>
+                        <strong>Focus on insights</strong>
+                        <p>Team analyzes data instead of processing it</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Technical Architecture -->
+    <section class="mockup-section">
+        <h2 class="section-title">Technical Architecture</h2>
+        <p class="section-description">
+            Built on Microsoft's robust Power Platform ecosystem for reliability, security, and scalability.
+        </p>
+        
+        <div class="architecture-diagram">
+            <div class="tech-stack-visual">
+                <div class="tech-item">
+                    <div class="tech-logo">📧</div>
+                    <h4>Outlook 365</h4>
+                    <p>Email monitoring & attachment extraction</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-logo">⚡</div>
+                    <h4>Power Automate</h4>
+                    <p>Workflow orchestration & business logic</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-logo">📁</div>
+                    <h4>SharePoint</h4>
+                    <p>Secure file storage & organization</p>
+                </div>
+                <div class="tech-item">
+                    <div class="tech-logo">📊</div>
+                    <h4>Power BI</h4>
+                    <p>Real-time analytics & dashboards</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ROI Calculator Visual -->
+    <section class="mockup-section">
+        <h2 class="section-title">Return on Investment</h2>
+        <p class="section-description">
+            The automation paid for itself in just 3 weeks through time savings alone.
+        </p>
+        
+        <div class="roi-calculator-visual">
+            <h3 style="font-size: 1.5rem; margin-bottom: 1rem;">Annual ROI</h3>
+            <div class="roi-number">400%</div>
+            
+            <div class="roi-breakdown">
+                <div class="roi-item">
+                    <strong>Time Saved</strong>
+                    <p>650 hours/year</p>
+                </div>
+                <div class="roi-item">
+                    <strong>Cost Savings</strong>
+                    <p>$32,500/year</p>
+                </div>
+                <div class="roi-item">
+                    <strong>Error Reduction</strong>
+                    <p>100% accuracy</p>
+                </div>
+                <div class="roi-item">
+                    <strong>Payback Period</strong>
+                    <p>3 weeks</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Time Comparison Visual -->
+    <section class="mockup-section">
+        <h2 class="section-title">Time Impact Visualization</h2>
+        <p class="section-description">
+            The dramatic reduction in processing time freed up valuable hours for strategic work.
+        </p>
+        
+        <div class="time-comparison">
+            <div class="time-block before">
+                <div class="time-value">15min</div>
+                <div class="time-label">Daily Manual Process</div>
+            </div>
+            <span class="arrow-transform">→</span>
+            <div class="time-block after">
+                <div class="time-value">30sec</div>
+                <div class="time-label">Automated Process</div>
+            </div>
+        </div>
+        
+        <div style="text-align: center; margin-top: 2rem;">
+            <p style="font-size: 1.2rem; color: #666;">
+                That's <strong style="color: #4ade80;">97% reduction</strong> in processing time
+            </p>
+            <p style="color: #999; margin-top: 0.5rem;">
+                Equivalent to gaining back 12.5 hours every week
+            </p>
+        </div>
+    </section>
+
+    <!-- Industry Applications -->
+    <section class="mockup-section">
+        <h2 class="section-title">Industry Applications</h2>
+        <p class="section-description">
+            This automation pattern can transform operations across multiple industries.
+        </p>
+        
+        <div class="industry-applications">
+            <div class="industry-card">
+                <div class="industry-icon">🏪</div>
+                <div class="industry-name">Retail</div>
+                <ul class="use-case-list">
+                    <li>Daily sales reports</li>
+                    <li>Inventory updates</li>
+                    <li>Store performance data</li>
+                </ul>
+            </div>
+            
+            <div class="industry-card">
+                <div class="industry-icon">🏥</div>
+                <div class="industry-name">Healthcare</div>
+                <ul class="use-case-list">
+                    <li>Patient records</li>
+                    <li>Lab results processing</li>
+                    <li>Insurance claims</li>
+                </ul>
+            </div>
+            
+            <div class="industry-card">
+                <div class="industry-icon">🏭</div>
+                <div class="industry-name">Manufacturing</div>
+                <ul class="use-case-list">
+                    <li>Production reports</li>
+                    <li>Quality control data</li>
+                    <li>Supply chain updates</li>
+                </ul>
+            </div>
+            
+            <div class="industry-card">
+                <div class="industry-icon">💼</div>
+                <div class="industry-name">Finance</div>
+                <ul class="use-case-list">
+                    <li>Transaction reports</li>
+                    <li>Statement processing</li>
+                    <li>Compliance documents</li>
+                </ul>
+            </div>
+        </div>
+    </section>
+
+    <!-- Call to Action -->
+    <section class="cta-section">
+        <h2 class="cta-title">Ready to Automate Your Email Processing?</h2>
+        <p class="cta-description">
+            Stop wasting hours on manual email tasks. Let's build an automation that works for your specific needs.
+        </p>
+        <div class="cta-buttons">
+            <a href="./index.html#contact" class="cta-btn primary">Get Your Free Consultation</a>
+            <a href="./index.html#work" class="cta-btn secondary">View More Projects</a>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer style="background: #0f0f1e; padding: 2rem; text-align: center; color: rgba(255,255,255,0.5);">
+        <p>&copy; 2024 Allan Ramirez. All rights reserved.</p>
+    </footer>
+</body>
+</html>
