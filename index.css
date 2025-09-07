@@ -627,9 +627,12 @@ body:not(.user-is-tabbing) a:focus {
 /* Project Button Grid */
 .project__button-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(28rem, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     grid-gap: var(--gutter-normal);
     margin-top: var(--gutter-medium);
+    max-width: 120rem;
+    margin-left: auto;
+    margin-right: auto;
 }
 
 .project-btn {
@@ -688,9 +691,15 @@ body:not(.user-is-tabbing) a:focus {
     margin-top: auto;
 }
 
+.project-btn__badge.coming-soon {
+    background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);
+    color: var(--white);
+    box-shadow: 0 2px 8px rgba(107, 114, 128, 0.3);
+}
+
 @media(max-width: 900px) {
     .project__button-grid {
-        grid-template-columns: repeat(auto-fit, minmax(25rem, 1fr));
+        grid-template-columns: repeat(2, 1fr);
         grid-gap: var(--gutter-small);
     }
 }
@@ -1633,6 +1642,12 @@ body:not(.user-is-tabbing) a:focus {
     text-transform: uppercase;
     letter-spacing: 1px;
     margin-bottom: var(--gutter-normal);
+}
+
+.roi-badge.coming-soon {
+    background: linear-gradient(135deg, #6b7280 0%, #9ca3af 100%);
+    color: var(--white);
+    box-shadow: 0 4px 15px rgba(107, 114, 128, 0.3);
 }
 
 .tech-stack {
