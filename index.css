@@ -2082,6 +2082,22 @@ body:not(.user-is-tabbing) a:focus {
     background: linear-gradient(135deg, #13b5ea 0%, #0f9cc9 100%);
 }
 
+.workflow-icon.email {
+    background: linear-gradient(135deg, #2563eb 0%, #1d4ed8 100%);
+}
+
+.workflow-icon.processing {
+    background: linear-gradient(135deg, #0078d4 0%, #106ebe 100%);
+}
+
+.workflow-icon.storage {
+    background: linear-gradient(135deg, #059669 0%, #047857 100%);
+}
+
+.workflow-icon.analytics {
+    background: linear-gradient(135deg, #ea580c 0%, #c2410c 100%);
+}
+
 .workflow-label {
     font-size: 1.2rem;
     font-weight: 600;
