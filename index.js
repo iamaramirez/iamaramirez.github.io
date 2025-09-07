@@ -88,13 +88,7 @@ const scrollObserver = new IntersectionObserver((entries) => {
 // Observe all animated elements
 document.addEventListener('DOMContentLoaded', () => {
   // Add animation classes to elements
-  const workBoxes = document.querySelectorAll('.work__box');
-  workBoxes.forEach((box, index) => {
-    box.classList.add('animate-on-scroll', `delay-${(index % 3) + 1}`);
-    scrollObserver.observe(box);
-  });
-  
-  const statBoxes = document.querySelectorAll('.stat__box');
+  const statBoxes = document.querySelectorAll('.stat__box, .metric__item');
   statBoxes.forEach((box, index) => {
     box.classList.add('animate-scale', `delay-${(index % 4) + 1}`);
     scrollObserver.observe(box);
@@ -117,14 +111,6 @@ document.addEventListener('DOMContentLoaded', () => {
     link.addEventListener('click', () => {
       const type = link.href.includes('mailto') ? 'email' : 'phone';
       trackEvent('Contact', 'Click', type);
-    });
-  });
-  
-  // Track project views
-  document.querySelectorAll('.work__box').forEach((box, index) => {
-    box.addEventListener('click', () => {
-      const projectTitle = box.querySelector('h3')?.textContent || `Project_${index + 1}`;
-      trackEvent('Portfolio', 'Project_View', projectTitle);
     });
   });
   
@@ -159,7 +145,7 @@ function animateCounter(element) {
   
   h3.dataset.animated = 'true';
   const text = h3.textContent;
-  const match = text.match(/(\d+)([%+]?)/);
+  const match = text.match(/(\d+)([%+$]?)/);
   
   if (match) {
     const target = parseInt(match[1]);
@@ -183,47 +169,127 @@ function animateCounter(element) {
 }
 
 /* -----------------------------------------
-  Smooth Hover Effects for Project Cards
+  Project Gallery System
  ---------------------------------------- */
 
-document.addEventListener('DOMContentLoaded', () => {
-  // Add smooth parallax effect on mouse move for project images
-  const projectBoxes = document.querySelectorAll('.work__box');
-  
-  projectBoxes.forEach(box => {
-    const image = box.querySelector('.work__image');
-    if (!image) return;
+class ProjectGallery {
+  constructor(galleryId, triggerClass) {
+    this.gallery = document.getElementById(galleryId);
+    this.triggerClass = triggerClass;
+    this.currentSlide = 0;
+    this.slides = this.gallery.querySelectorAll('.gallery__slide');
+    this.totalSlides = this.slides.length;
     
-    box.addEventListener('mousemove', (e) => {
-      const rect = box.getBoundingClientRect();
-      const x = e.clientX - rect.left;
-      const y = e.clientY - rect.top;
-      
-      const centerX = rect.width / 2;
-      const centerY = rect.height / 2;
-      
-      const deltaX = (x - centerX) / centerX;
-      const deltaY = (y - centerY) / centerY;
-      
-      image.style.transform = `scale(1.05) rotateY(${deltaX * 5}deg) rotateX(${-deltaY * 5}deg)`;
+    this.init();
+  }
+  
+  init() {
+    // Gallery trigger buttons
+    document.querySelectorAll(`.${this.triggerClass}`).forEach(trigger => {
+      trigger.addEventListener('click', (e) => {
+        e.preventDefault();
+        this.open();
+        trackEvent('Portfolio', 'Gallery_Open', this.triggerClass);
+      });
     });
     
-    box.addEventListener('mouseleave', () => {
-      const image = box.querySelector('.work__image');
-      if (image) {
-        image.style.transform = 'scale(1) rotateY(0) rotateX(0)';
+    // Navigation buttons
+    const prevBtn = this.gallery.querySelector('.gallery__btn--prev');
+    const nextBtn = this.gallery.querySelector('.gallery__btn--next');
+    
+    if (prevBtn) prevBtn.addEventListener('click', () => this.prevSlide());
+    if (nextBtn) nextBtn.addEventListener('click', () => this.nextSlide());
+    
+    // Dot navigation
+    const dots = this.gallery.querySelectorAll('.gallery__dot');
+    dots.forEach((dot, index) => {
+      dot.addEventListener('click', () => this.goToSlide(index));
+    });
+    
+    // Close handlers
+    const closeBtn = this.gallery.querySelector('.modal__close');
+    const overlay = this.gallery.querySelector('.modal__overlay');
+    
+    if (closeBtn) closeBtn.addEventListener('click', () => this.close());
+    if (overlay) overlay.addEventListener('click', () => this.close());
+    
+    // Keyboard navigation
+    document.addEventListener('keydown', (e) => {
+      if (!this.gallery.classList.contains('active')) return;
+      
+      switch(e.key) {
+        case 'Escape':
+          this.close();
+          break;
+        case 'ArrowLeft':
+          this.prevSlide();
+          break;
+        case 'ArrowRight':
+          this.nextSlide();
+          break;
       }
     });
-  });
-});
+  }
+  
+  open() {
+    this.gallery.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    this.updateSlide();
+  }
+  
+  close() {
+    this.gallery.classList.remove('active');
+    document.body.style.overflow = '';
+  }
+  
+  updateSlide() {
+    // Hide all slides
+    this.slides.forEach(slide => slide.classList.remove('active'));
+    
+    // Show current slide
+    if (this.slides[this.currentSlide]) {
+      this.slides[this.currentSlide].classList.add('active');
+    }
+    
+    // Update counter
+    const counter = this.gallery.querySelector('.gallery__counter');
+    if (counter) {
+      counter.textContent = `${this.currentSlide + 1} / ${this.totalSlides}`;
+    }
+    
+    // Update dots
+    const dots = this.gallery.querySelectorAll('.gallery__dot');
+    dots.forEach((dot, index) => {
+      dot.classList.toggle('active', index === this.currentSlide);
+    });
+  }
+  
+  nextSlide() {
+    this.currentSlide = (this.currentSlide + 1) % this.totalSlides;
+    this.updateSlide();
+    trackEvent('Portfolio', 'Gallery_Navigate', 'Next');
+  }
+  
+  prevSlide() {
+    this.currentSlide = this.currentSlide === 0 ? this.totalSlides - 1 : this.currentSlide - 1;
+    this.updateSlide();
+    trackEvent('Portfolio', 'Gallery_Navigate', 'Previous');
+  }
+  
+  goToSlide(index) {
+    this.currentSlide = index;
+    this.updateSlide();
+    trackEvent('Portfolio', 'Gallery_Navigate', `Slide_${index + 1}`);
+  }
+}
 
 /* -----------------------------------------
-  Gallery Modal Functionality
+  AdventureWorks Image Gallery (Original)
  ---------------------------------------- */
 
-class GalleryModal {
+class AdventureWorksGallery {
   constructor() {
-    this.modal = document.getElementById('galleryModal');
+    this.modal = document.getElementById('adventureworksGallery');
     this.modalImage = this.modal.querySelector('.modal__image');
     this.modalCaption = this.modal.querySelector('.modal__caption');
     this.closeBtn = this.modal.querySelector('.modal__close');
@@ -234,23 +300,22 @@ class GalleryModal {
     this.dots = this.modal.querySelectorAll('.gallery__dot');
     
     this.currentIndex = 0;
-    // Updated gallery images to focus on automation projects
     this.galleryImages = [
       {
-        src: './images/automation-servicetitan-xero-integration.jpg',
-        alt: 'ServiceTitan to Xero Invoice Automation Dashboard'
+        src: './images/pbi-adventureworks-1-home.jpg',
+        alt: 'AdventureWorks Home Dashboard'
       },
       {
-        src: './images/automation-workflow-overview.jpg',
-        alt: 'Business Process Automation Workflow Overview'
+        src: './images/pbi-adventureworks-2-overview.jpg',
+        alt: 'AdventureWorks Overview Dashboard'
       },
       {
-        src: './images/automation-power-platform-solution.jpg',
-        alt: 'Microsoft Power Platform Integration Solution'
+        src: './images/pbi-adventureworks-3-territory.jpg',
+        alt: 'Territory Performance Analysis'
       },
       {
-        src: './images/automation-roi-dashboard.jpg',
-        alt: 'Automation ROI and Performance Metrics'
+        src: './images/pbi-adventureworks-4-products.jpg',
+        alt: 'Product Analysis Dashboard'
       }
     ];
     
@@ -258,11 +323,12 @@ class GalleryModal {
   }
   
   init() {
-    // Click handlers for gallery triggers
-    document.querySelectorAll('.gallery-trigger').forEach(trigger => {
+    // Click handlers for AdventureWorks gallery triggers
+    document.querySelectorAll('.adventureworks-gallery-trigger').forEach(trigger => {
       trigger.addEventListener('click', (e) => {
-        this.open(0); // Always start with first image
-        trackEvent('Portfolio', 'Gallery_Open', 'Automation_Projects');
+        e.preventDefault();
+        this.open(0);
+        trackEvent('Portfolio', 'AdventureWorks_Gallery_Open', '');
       });
     });
     
@@ -295,13 +361,6 @@ class GalleryModal {
           break;
       }
     });
-    
-    // Click handlers for regular work images (non-gallery)
-    document.querySelectorAll('.work__image:not(.gallery-trigger)').forEach(img => {
-      img.addEventListener('click', (e) => {
-        this.openSingle(e.target.src, e.target.alt);
-      });
-    });
   }
   
   open(index = 0) {
@@ -311,26 +370,9 @@ class GalleryModal {
     document.body.style.overflow = 'hidden';
   }
   
-  openSingle(src, alt) {
-    this.modalImage.src = src;
-    this.modalCaption.textContent = alt;
-    this.modal.classList.add('active');
-    document.body.style.overflow = 'hidden';
-    
-    // Hide gallery controls for single images
-    this.prevBtn.style.display = 'none';
-    this.nextBtn.style.display = 'none';
-    this.modal.querySelector('.gallery__indicators').style.display = 'none';
-  }
-  
   close() {
     this.modal.classList.remove('active');
     document.body.style.overflow = '';
-    
-    // Show gallery controls again
-    this.prevBtn.style.display = 'flex';
-    this.nextBtn.style.display = 'flex';
-    this.modal.querySelector('.gallery__indicators').style.display = 'flex';
     
     setTimeout(() => {
       this.modalImage.src = '';
@@ -389,10 +431,10 @@ class CaseStudyModal {
           text: "This automation transformed our accounting process completely. What used to take our bookkeeper most of Monday morning now happens automatically. The accuracy is perfect, and we can focus on growing the business instead of wrestling with invoice matching.",
           author: "Sarah Johnson, Operations Manager"
         },
-        image: './images/case-study-servicetitan-xero.jpg'
+        image: './images/automation-servicetitan-xero.jpg'
       },
       'work-order-automation': {
-        title: 'Work Order to Job Creation Automation',
+        title: 'Email Work Order Automation',
         challenge: 'Manual work order processing was causing delays in job creation and impacting customer satisfaction. Email work orders required manual data entry, leading to delays and errors.',
         solution: 'Automated workflow from email work orders directly into the job management system with instant notifications to technicians and automatic customer confirmations.',
         results: [
@@ -405,23 +447,7 @@ class CaseStudyModal {
           text: "Our response time to new work orders went from hours to minutes. Customers notice the difference, and our team can focus on actual service delivery instead of paperwork.",
           author: "Mike Rodriguez, Service Manager"
         },
-        image: './images/case-study-work-order.jpg'
-      },
-      'inventory-sync': {
-        title: 'Multi-System Inventory Synchronization',
-        challenge: 'Parts inventory was tracked separately in field service software and accounting system, leading to stock discrepancies and missed reorder opportunities.',
-        solution: 'Real-time inventory synchronization between ServiceTitan, Xero, and warehouse management system with automated reorder notifications.',
-        results: [
-          'Inventory Accuracy: 99% synchronization across all systems',
-          'Stock-outs Reduced: 75% reduction in emergency parts orders',
-          'Administrative Time: 15 hours weekly saved on manual updates',
-          'Cost Savings: $25,000 annually in inventory optimization'
-        ],
-        testimonial: {
-          text: "We finally have real-time visibility into our parts inventory across all systems. No more emergency runs to suppliers or disappointed customers waiting for parts.",
-          author: "Jennifer Chen, Inventory Manager"
-        },
-        image: './images/case-study-inventory-sync.jpg'
+        image: './images/automation-work-order.jpg'
       }
     };
     
@@ -488,7 +514,6 @@ class CaseStudyModal {
     // CTA button handler
     this.modal.querySelector('.case-study-cta').addEventListener('click', () => {
       trackEvent('CaseStudy', 'CTA_Click', 'Contact_From_Modal');
-      // Scroll to contact section
       document.querySelector('#contact')?.scrollIntoView({ behavior: 'smooth' });
       this.close();
     });
@@ -602,7 +627,7 @@ class LeadCaptureSystem {
     const popup = this.createPopup(
       'Before You Go...',
       'Get a free automation assessment for your business processes',
-      'Download Free Process Automation Checklist',
+      'Get Free Checklist',
       'exit-intent'
     );
     
@@ -613,7 +638,7 @@ class LeadCaptureSystem {
     const popup = this.createPopup(
       'Interested in Process Automation?',
       'Download our ROI calculator to see how much time and money automation could save your business',
-      'Get Free ROI Calculator',
+      'Calculate ROI',
       'value-offer'
     );
     
@@ -684,9 +709,6 @@ class LeadCaptureSystem {
   }
   
   submitLead(email, type) {
-    // Here you would integrate with your email service provider
-    // For now, we'll use a simple fetch to a form handler
-    
     const leadData = {
       email: email,
       source: 'portfolio_website',
@@ -732,7 +754,6 @@ class LeadCaptureSystem {
   }
   
   showError(message) {
-    // Simple error display - you might want to style this better
     alert(message);
   }
   
@@ -813,6 +834,7 @@ class ROICalculator {
     // Add trigger for ROI calculator
     document.addEventListener('click', (e) => {
       if (e.target.classList.contains('roi-calculator-trigger')) {
+        e.preventDefault();
         this.open();
       }
     });
@@ -875,13 +897,152 @@ class ROICalculator {
 }
 
 /* -----------------------------------------
+  Platform Analysis Download System
+ ---------------------------------------- */
+
+class PlatformAnalysisDownload {
+  constructor() {
+    this.init();
+  }
+  
+  init() {
+    // Add trigger for platform analysis download
+    document.addEventListener('click', (e) => {
+      if (e.target.classList.contains('platform-analysis-trigger')) {
+        e.preventDefault();
+        this.showDownloadForm();
+      }
+    });
+  }
+  
+  showDownloadForm() {
+    const popup = this.createDownloadPopup();
+    trackEvent('Platform_Analysis', 'Download_Triggered', '');
+  }
+  
+  createDownloadPopup() {
+    const popupHTML = `
+      <div class="lead-popup" id="analysisDownloadPopup">
+        <div class="lead-popup__overlay"></div>
+        <div class="lead-popup__content">
+          <button class="lead-popup__close">&times;</button>
+          <div class="lead-popup__header">
+            <h3>Download Complete Power Platform Analysis</h3>
+            <p>Get the comprehensive 15-page analysis comparing Power Platform to alternatives, including detailed ROI calculations and implementation strategies.</p>
+          </div>
+          <div class="lead-popup__form">
+            <input type="email" placeholder="Enter your business email" class="lead-popup__email" required>
+            <button class="btn btn--primary lead-popup__submit">Download Analysis</button>
+          </div>
+          <p class="lead-popup__privacy">
+            No spam. Unsubscribe anytime. Your information is secure.
+          </p>
+        </div>
+      </div>
+    `;
+    
+    document.body.insertAdjacentHTML('beforeend', popupHTML);
+    const popup = document.getElementById('analysisDownloadPopup');
+    
+    // Show popup with animation
+    setTimeout(() => popup.classList.add('active'), 100);
+    
+    // Handle form submission
+    popup.querySelector('.lead-popup__submit').addEventListener('click', (e) => {
+      e.preventDefault();
+      const email = popup.querySelector('.lead-popup__email').value;
+      
+      if (this.validateEmail(email)) {
+        this.submitAnalysisRequest(email);
+        this.showAnalysisThankYou(popup);
+        trackEvent('Platform_Analysis', 'Download_Submit', 'Success');
+      } else {
+        alert('Please enter a valid business email address');
+      }
+    });
+    
+    // Close handlers
+    popup.querySelector('.lead-popup__close').addEventListener('click', () => {
+      this.closePopup(popup);
+      trackEvent('Platform_Analysis', 'Download_Closed', '');
+    });
+    
+    popup.querySelector('.lead-popup__overlay').addEventListener('click', () => {
+      this.closePopup(popup);
+      trackEvent('Platform_Analysis', 'Download_Closed', '');
+    });
+    
+    return popup;
+  }
+  
+  validateEmail(email) {
+    const businessEmailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    const freeEmailProviders = ['gmail.com', 'yahoo.com', 'hotmail.com', 'outlook.com'];
+    const domain = email.split('@')[1];
+    
+    return businessEmailPattern.test(email) && !freeEmailProviders.includes(domain?.toLowerCase());
+  }
+  
+  submitAnalysisRequest(email) {
+    const requestData = {
+      email: email,
+      source: 'platform_analysis_download',
+      document: 'power_platform_competitive_analysis',
+      timestamp: new Date().toISOString()
+    };
+    
+    // Integration with your email service provider
+    fetch('/api/analysis-download', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify(requestData)
+    }).catch(error => {
+      console.log('Analysis download error:', error);
+    });
+  }
+  
+  showAnalysisThankYou(popup) {
+    const content = popup.querySelector('.lead-popup__content');
+    content.innerHTML = `
+      <div class="lead-popup__thank-you">
+        <h3>Download Starting!</h3>
+        <p>Check your email for the Power Platform Analysis PDF. You'll also receive strategic automation insights weekly.</p>
+        <button class="btn btn--primary lead-popup__continue">Continue Browsing</button>
+      </div>
+    `;
+    
+    popup.querySelector('.lead-popup__continue').addEventListener('click', () => {
+      this.closePopup(popup);
+    });
+    
+    // Auto-close after 5 seconds
+    setTimeout(() => {
+      this.closePopup(popup);
+    }, 5000);
+  }
+  
+  closePopup(popup) {
+    popup.classList.remove('active');
+    setTimeout(() => popup.remove(), 300);
+  }
+}
+
+/* -----------------------------------------
   Initialize All Components
  ---------------------------------------- */
 
 // Initialize all components when DOM is ready
 document.addEventListener('DOMContentLoaded', () => {
-  new GalleryModal();
+  // Initialize gallery systems
+  new ProjectGallery('automationGallery', 'automation-gallery-trigger');
+  new ProjectGallery('powerbiGallery', 'powerbi-gallery-trigger');
+  new AdventureWorksGallery();
+  
+  // Initialize modal systems
   new CaseStudyModal();
   new LeadCaptureSystem();
   new ROICalculator();
+  new PlatformAnalysisDownload();
 });
